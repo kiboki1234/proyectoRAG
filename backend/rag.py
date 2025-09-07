@@ -1,19 +1,17 @@
 from __future__ import annotations
 """
-RAG core helpers: búsqueda semántica + construcción de prompt + generación con LLM local (llama.cpp).
-
-- Usa FAISS para recuperación top-k con filtro opcional por archivo (source).
-- Construye un prompt Instruct con contexto + reglas (idioma, estilo, citas).
-- Recorta el contexto para no exceder N_CTX del modelo.
-- Genera respuesta con llama.cpp (modelo GGUF local).
+RAG core helpers: recuperación híbrida (FAISS + BM25), prompt robusto y clipping por tokens,
+y generación con llama.cpp (GGUF local).
 """
 
 from typing import List, Tuple, Optional
+import regex as re
 
 import faiss
 import numpy as np
 from llama_cpp import Llama
 from sentence_transformers import SentenceTransformer
+from rank_bm25 import BM25Okapi
 
 from config import (
     EMBED_CACHE_DIR,
@@ -31,28 +29,54 @@ from config import (
 # =====================
 
 def _load_embedder() -> SentenceTransformer:
-    """Carga el modelo de embeddings (cache local)."""
     return SentenceTransformer(
         EMBEDDING_MODEL_ID,
         cache_folder=str(EMBED_CACHE_DIR),
     )
 
 def _load_llm() -> Llama:
-    """Carga el LLM (GGUF) con llama.cpp, ajustado para menor uso de RAM."""
     return Llama(
         model_path=LLM_MODEL_PATH,
         n_ctx=N_CTX,
         n_threads=N_THREADS,
-        n_batch=64,        # lotes pequeños ↓ RAM (prueba 32 si aún falta)
-        logits_all=False,  # no guardar logits de todo el contexto
-        embedding=False,   # no usar modo embeddings aquí
-        use_mmap=True,     # mapea el archivo del modelo
-        use_mlock=False,   # en Windows no aplica
+        n_batch=64,
+        logits_all=False,
+        embedding=False,
+        use_mmap=True,
+        use_mlock=False,
         verbose=False,
     )
 
 # =====================
-# Búsqueda vectorial (con filtro opcional por archivo)
+# Utilidades de tokenización simple (BM25)
+# =====================
+
+def _simple_tokens(text: str) -> List[str]:
+    # Tokenización simple sensible a español
+    return re.findall(r"\p{L}+\p{M}*|\d+[.,]?\d*", (text or "").lower())
+
+_bm25 = None
+_bm25_len = 0
+_bm25_corpus_tokens: List[List[str]] = []
+
+def _ensure_bm25(chunks: List[str]) -> BM25Okapi:
+    global _bm25, _bm25_len, _bm25_corpus_tokens
+    if _bm25 is None or _bm25_len != len(chunks):
+        _bm25_corpus_tokens = [_simple_tokens(c) for c in chunks]
+        _bm25 = BM25Okapi(_bm25_corpus_tokens)
+        _bm25_len = len(chunks)
+    return _bm25
+
+def _bm25_topk(chunks: List[str], query: str, topn: int) -> List[int]:
+    bm25 = _ensure_bm25(chunks)
+    qtok = _simple_tokens(query)
+    scores = bm25.get_scores(qtok)
+    # topn índices por score
+    idxs = np.argsort(scores)[::-1][:topn]
+    return idxs.tolist()
+
+# =====================
+# Recuperación híbrida (FAISS + BM25) + filtro por archivo
 # =====================
 
 def search(
@@ -64,13 +88,34 @@ def search(
     sources: Optional[List[str]] = None,
     filter_source: Optional[str] = None,
 ) -> List[Tuple[int, float, str]]:
-    """Top-k (con filtro opcional por filename)."""
-    model = _load_embedder()
-    q = model.encode([query], normalize_embeddings=True, convert_to_numpy=True).astype(np.float32)
+    """
+    Fusiona candidatos de:
+      - Embeddings (FAISS)
+      - BM25 (texto exacto)
+    usando Reciprocal Rank Fusion (RRF). Luego aplica filtro por filename (si se pide).
+    """
+    # --- Embeddings candidatos ---
+    embed_model = _load_embedder()
+    q = embed_model.encode([query], normalize_embeddings=True, convert_to_numpy=True).astype(np.float32)
+    m = max(k * 8, 100)  # traemos más para fusionar
+    D, I = index.search(q, m)
+    embed_list = I[0].tolist()
 
-    # Si hay filtro, pedimos más candidatos y luego filtramos
-    nprobe = max(k, k * 6) if filter_source else k
-    D, I = index.search(q, nprobe)
+    # --- BM25 candidatos ---
+    bm25_list = _bm25_topk(chunks, query, m)
+
+    # --- RRF ---
+    c = 60  # constante típica
+    rrf_scores = {}
+    for rank, idx in enumerate(embed_list):
+        if idx == -1: 
+            continue
+        rrf_scores[idx] = rrf_scores.get(idx, 0.0) + 1.0 / (c + rank + 1)
+    for rank, idx in enumerate(bm25_list):
+        rrf_scores[idx] = rrf_scores.get(idx, 0.0) + 1.0 / (c + rank + 1)
+
+    # ordenar por score
+    fused = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
 
     def match_src(idx: int) -> bool:
         if not filter_source or not sources:
@@ -78,7 +123,7 @@ def search(
         return filter_source.lower() in (sources[idx] or "").lower()
 
     results: List[Tuple[int, float, str]] = []
-    for score, idx in zip(D[0].tolist(), I[0].tolist()):
+    for idx, score in fused:
         if idx == -1:
             continue
         if match_src(idx):
@@ -86,9 +131,9 @@ def search(
             if len(results) >= k:
                 break
 
-    # Si no hubo resultados con filtro, cae a sin filtro
+    # fallback sin filtro si no hay nada
     if not results and filter_source:
-        for score, idx in zip(D[0].tolist(), I[0].tolist()):
+        for idx, score in fused:
             if idx == -1:
                 continue
             results.append((idx, float(score), chunks[idx]))
@@ -98,7 +143,7 @@ def search(
     return results
 
 # =====================
-# Prompting (idioma + estilo + citas)
+# Prompting + clipping
 # =====================
 
 SYS_PROMPT = (
@@ -125,46 +170,35 @@ SYS_PROMPT = (
 )
 
 def _language_hint(query: str) -> str:
-    """Heurística mínima para reforzar idioma español; si no, usa idioma de la pregunta."""
     es_markers = ["¿", "¡", "ñ", "á", "é", "í", "ó", "ú"]
     if any(ch in query for ch in es_markers):
         return "IDIOMA_RESPUESTA: español"
     return "IDIOMA_RESPUESTA: mismo idioma de la pregunta"
 
 def _style_hint(query: str) -> str:
-    """Sugerencia de estilo: lista si la pregunta pide pasos/procedimiento."""
     q = query.lower()
     if any(kw in q for kw in ["pasos", "cómo", "lista", "procedimiento", "instrucciones"]):
         return "ESTILO: lista numerada breve"
     return "ESTILO: párrafo(s) breves"
 
 def _format_prompt(query: str, passages: List[Tuple[int, float, str]]) -> str:
-    """Construye el prompt sin recorte (sin <s> para evitar el warning)."""
     ctx_blocks = [f"[{idx}] {text}" for idx, _, text in passages]
     context = "\n\n".join(ctx_blocks)
-
     lang = _language_hint(query)
     style = _style_hint(query)
-
     user = (
         f"{lang}\n"
         f"{style}\n"
         f"PREGUNTA: {query}\n"
         "Responde de forma breve, obedeciendo las POLÍTICAS y el FORMATO indicados."
     )
-
-    # OJO: no anteponemos "<s>" para evitar "duplicate <s>"
-    prompt = (
+    return (
         f"[INST] <<SYS>>\n{SYS_PROMPT}\n<</SYS>>\n\n"
         f"CONTEXTO:\n{context}\n\n"
         f"{user} [/INST]"
     )
-    return prompt
-
-# ---- utilidades de recorte por tokens ----
 
 def _count_tokens(llm: Llama, text: str) -> int:
-    """Cuenta tokens con el tokenizer real del modelo."""
     return len(llm.tokenize(text.encode("utf-8"), add_bos=True))
 
 def build_prompt_clipped(
@@ -175,17 +209,12 @@ def build_prompt_clipped(
     max_new_tokens: int = MAX_TOKENS,
     margin: int = 64,
 ) -> str:
-    """
-    Incluye pasajes uno a uno hasta no exceder (ctx_limit - max_new_tokens - margin).
-    Si ningún pasaje cabe, devuelve prompt con el primero truncado.
-    """
     selected: List[Tuple[int, float, str]] = []
     base_prompt = _format_prompt(query, [])
     budget = ctx_limit - max_new_tokens - margin
     if budget < 200:
         budget = max(128, ctx_limit // 4)
 
-    # agregar pasajes mientras quepa
     for p in passages:
         tmp = _format_prompt(query, selected + [p])
         if _count_tokens(llm, tmp) <= budget:
@@ -193,7 +222,6 @@ def build_prompt_clipped(
         else:
             break
 
-    # si no cupo ninguno, forzar con el primero truncado por caracteres
     if not selected and passages:
         idx, sc, txt = passages[0]
         for cut in (2000, 1500, 1000, 700, 500, 300):
@@ -202,7 +230,7 @@ def build_prompt_clipped(
                 selected = [(idx, sc, txt[:cut])]
                 break
         if not selected:
-            return base_prompt  # sin contexto, el modelo responderá "No está…"
+            return base_prompt
 
     return _format_prompt(query, selected)
 
@@ -211,7 +239,6 @@ def build_prompt_clipped(
 # =====================
 
 def generate_answer(llm: Llama, prompt: str) -> str:
-    """Genera respuesta concisa. Controla temperatura y tokens."""
     out = llm(
         prompt,
         max_tokens=MAX_TOKENS,

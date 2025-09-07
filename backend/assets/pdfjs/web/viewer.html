@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>PDF.js Viewer</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- Estilos del visor -->
+    <link rel="stylesheet" href="./pdf_viewer.css" />
+    <style>
+      html, body {
+        margin: 0; padding: 0; height: 100%; width: 100%;
+        background: #f7f7f8; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell;
+      }
+      #toolbar {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 12px; background: #111827; color: #e5e7eb;
+      }
+      #toolbar input[type="text"] {
+        flex: 1; min-width: 120px; padding: 6px 8px; border-radius: 10px; border: 1px solid #374151; background: #1f2937; color: #e5e7eb;
+      }
+      #viewerContainer {
+        position: absolute; top: 44px; left: 0; right: 0; bottom: 0;
+        overflow: auto; background: #fff;
+      }
+      #viewer { margin: 8px auto; }
+      .btn {
+        appearance: none; border: 1px solid #374151; background: #1f2937; color: #e5e7eb;
+        padding: 6px 10px; border-radius: 10px; cursor: pointer;
+      }
+      .btn:hover { background: #374151; }
+      .sep { width: 1px; height: 22px; background: #374151; margin: 0 6px; }
+    </style>
+  </head>
+  <body>
+    <!-- Toolbar mínima -->
+    <div id="toolbar">
+      <button id="prev" class="btn">◀</button>
+      <span id="pageInfo">1 / 1</span>
+      <button id="next" class="btn">▶</button>
+      <div class="sep"></div>
+      <button id="zoomOut" class="btn">−</button>
+      <button id="zoomIn" class="btn">＋</button>
+      <div class="sep"></div>
+      <input id="searchInput" type="text" placeholder="Buscar en el documento…" />
+      <button id="searchBtn" class="btn">Buscar</button>
+    </div>
+
+    <!-- Contenedor del visor -->
+    <div id="viewerContainer">
+      <div id="viewer" class="pdfViewer"></div>
+    </div>
+
+<script type="module">
+  import * as pdfjsLib from '../build/pdf.mjs'
+  import { PDFViewer, EventBus, PDFFindController, PDFLinkService } from './pdf_viewer.mjs'
+
+  // ===== Worker auto-detect =====
+  async function setupWorker() {
+    try {
+      const r = await fetch('../build/pdf.worker.mjs', { method: 'HEAD' })
+      if (r.ok) {
+        console.log('[pdf.js] usando worker ES module')
+        pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(
+          new URL('../build/pdf.worker.mjs', import.meta.url),
+          { type: 'module' }
+        )
+        return
+      }
+    } catch (_) {}
+
+    try {
+      const r = await fetch('../build/pdf.worker.js', { method: 'HEAD' })
+      if (r.ok) {
+        console.log('[pdf.js] usando worker JS clásico')
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '../build/pdf.worker.js'
+        return
+      }
+    } catch (_) {}
+
+    try {
+      const r = await fetch('../build/pdf.worker.min.js', { method: 'HEAD' })
+      if (r.ok) {
+        console.log('[pdf.js] usando worker JS minificado')
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '../build/pdf.worker.min.js'
+        return
+      }
+    } catch (_) {}
+
+    const msg = 'No se encontró ningún worker (pdf.worker.mjs / pdf.worker.js) en backend/assets/pdfjs/build'
+    console.error('[pdf.js] ' + msg)
+    document.body.insertAdjacentHTML('beforeend',
+      '<div style="position:fixed;bottom:8px;left:8px;background:#fee;border:1px solid #f99;padding:8px;border-radius:8px;color:#900">' +
+      msg + '</div>')
+  }
+  await setupWorker()
+
+  // ===== Parámetros file/page/search =====
+  const usp = new URLSearchParams(location.search)
+  const fileParam = usp.get('file')
+  if (!fileParam) {
+    document.body.innerHTML = '<p style="padding:16px">Falta el parámetro <code>?file=</code> con la URL del PDF.</p>'
+    throw new Error('Missing file param')
+  }
+  const hash = location.hash.startsWith('#') ? location.hash.slice(1) : ''
+  const hsp = new URLSearchParams(hash)
+  const startPage = parseInt(hsp.get('page') || '1', 10) || 1
+  const startSearch = hsp.get('search') ? decodeURIComponent(hsp.get('search')) : ''
+
+  // ===== Infra del visor =====
+  const eventBus = new EventBus()
+  const linkService = new PDFLinkService({ eventBus })
+  const findController = new PDFFindController({ eventBus, linkService })
+
+  const container = document.getElementById('viewerContainer')
+  const viewer = new PDFViewer({
+    container,
+    eventBus,
+    linkService,
+    findController,
+    textLayerMode: 2,
+    useOnlyCssZoom: true,
+    annotationMode: 2,
+  })
+  linkService.setViewer(viewer)
+  // ❌ no existe: findController.setViewer(viewer)
+
+  // ===== Carga PDF con manejo de errores =====
+  const url = decodeURIComponent(fileParam) // -> http://127.0.0.1:8000/file/...
+  console.log('[pdf.js] loading', url)
+  let pdfDoc
+  try {
+    const loadingTask = pdfjsLib.getDocument({ url })
+    pdfDoc = await loadingTask.promise
+  } catch (err) {
+    console.error('Error cargando PDF:', err)
+    document.getElementById('viewer').innerHTML =
+      '<div style="padding:16px;color:#b91c1c;background:#fee;border:1px solid #fca5a5;border-radius:8px">' +
+      'No se pudo cargar el PDF desde <code>' + url.replace(/&/g, '&amp;') + '</code>.</div>'
+    throw err
+  }
+
+  // Enlazar documento a los servicios
+  viewer.setDocument(pdfDoc)
+  linkService.setDocument(pdfDoc, null)
+  findController.setDocument(pdfDoc)   // ✅ necesario para búsquedas
+
+  const pageInfo = document.getElementById('pageInfo')
+  const updatePageInfo = () => { pageInfo.textContent = `${viewer.currentPageNumber} / ${pdfDoc.numPages}` }
+
+  eventBus.on('pagesinit', () => {
+    viewer.currentScaleValue = 'page-width'
+    viewer.currentPageNumber = Math.min(Math.max(startPage, 1), pdfDoc.numPages)
+    updatePageInfo()
+    if (startSearch) {
+      // Primer highlight
+      eventBus.dispatch('find', {
+        type: 'find',
+        query: startSearch,
+        phraseSearch: true,
+        caseSensitive: false,
+        entireWord: false,
+        highlightAll: true,
+        findPrevious: false,
+      })
+    }
+  })
+  eventBus.on('pagechanging', () => updatePageInfo())
+
+  // Controles
+  document.getElementById('prev').onclick = () => { if (viewer.currentPageNumber > 1) viewer.currentPageNumber -= 1 }
+  document.getElementById('next').onclick = () => { if (viewer.currentPageNumber < pdfDoc.numPages) viewer.currentPageNumber += 1 }
+  document.getElementById('zoomIn').onclick = () => { viewer.currentScale = viewer.currentScale * 1.1 }
+  document.getElementById('zoomOut').onclick = () => { viewer.currentScale = viewer.currentScale / 1.1 }
+
+  const searchInput = document.getElementById('searchInput')
+  const searchBtn = document.getElementById('searchBtn')
+  if (startSearch) searchInput.value = startSearch
+  searchBtn.onclick = () => {
+    const q = searchInput.value.trim()
+    if (!q) return
+    // Re-ejecuta búsqueda
+    eventBus.dispatch('find', {
+      type: 'find',
+      query: q,
+      phraseSearch: true,
+      caseSensitive: false,
+      entireWord: false,
+      highlightAll: true,
+      findPrevious: false,
+    })
+  }
+</script>
+
+
+
+  </body>
+</html>

@@ -241,3 +241,5 @@ backend/data/models/embed/
 *.h5
 *.pt
 *.ckpt
+
+frontend/node_modules/
