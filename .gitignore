@@ -206,7 +206,38 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-backend/data/models/llm
-backend/data/models/embed
-backend/data/docs
-backend/data/store
+# ---- Python / entorno ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# ---- SO / editor ----
+.DS_Store
+Thumbs.db
+
+# ---- Datos de runtime (no versionar) ----
+backend/data/docs/
+backend/data/store/
+
+# ---- Modelos grandes (no versionar) ----
+backend/data/models/llm/
+backend/data/models/embed/
+
+# Mantener estructura (permitir .gitkeep/README)
+!backend/data/docs/.gitkeep
+!backend/data/store/.gitkeep
+!backend/data/models/.gitkeep
+!backend/data/models/README.md
+
+# ---- Pesados por si aparecen sueltos ----
+*.gguf
+*.onnx
+*.safetensors
+*.bin
+*.h5
+*.pt
+*.ckpt
