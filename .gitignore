@@ -209,3 +209,4 @@ __marimo__/
 backend/data/models/llm
 backend/data/models/embed
 backend/data/docs
+backend/data/store
