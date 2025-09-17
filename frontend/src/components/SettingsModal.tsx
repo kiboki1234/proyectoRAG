@@ -1,40 +1,36 @@
 import { useEffect, useState } from 'react'
 import { getBaseUrl, setBaseUrl } from '@/lib/storage'
+import { toast } from 'sonner'
 
 export default function SettingsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [baseUrl, setUrl] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     if (open) setUrl(getBaseUrl())
   }, [open])
 
+  const save = () => {
+    setBaseUrl(url)
+    toast.success('URL del backend guardada')
+    onClose()
+  }
+
   if (!open) return null
-
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Ajustes</h2>
-        <p className="mt-1 text-sm text-gray-500">Configura la URL del backend (FastAPI).</p>
-
-        <label className="mt-4 block text-sm font-medium text-gray-700">Base URL</label>
+        <label className="mt-4 block text-sm text-gray-700">URL del backend</label>
         <input
-          className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
-          value={baseUrl}
+          value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="http://127.0.0.1:8000"
+          className="mt-1 w-full rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         />
-
-        <div className="mt-6 flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-xl border px-4 py-2 text-sm">Cerrar</button>
-          <button
-            onClick={() => {
-              setBaseUrl(baseUrl)
-              onClose()
-            }}
-            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-          >
-            Guardar
-          </button>
+        <div className="mt-4 flex justify-end gap-2">
+          <button className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50" onClick={onClose}>Cancelar</button>
+          <button className="rounded-xl bg-brand-600 px-4 py-2 text-sm text-white hover:bg-brand-700" onClick={save}>Guardar</button>
         </div>
       </div>
     </div>

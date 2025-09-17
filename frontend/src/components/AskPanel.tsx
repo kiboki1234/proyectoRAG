@@ -1,4 +1,3 @@
-// frontend/src/components/AskPanel.tsx
 import { useState, KeyboardEvent } from 'react'
 import { ask, Citation } from '@/lib/api'
 import { toast } from 'sonner'
@@ -26,6 +25,10 @@ export default function AskPanel({
     if (!q) return toast.info('Escribe una pregunta')
     try {
       setLoading(true)
+      // Limpia el estado para evitar arrastre de textos antiguos
+      setAnswer('')
+      setCitations([])
+
       const res = await ask(q, source)
       setAnswer(res.answer)
       setCitations(res.citations)
@@ -46,26 +49,17 @@ export default function AskPanel({
   }
 
   const handleJump = (c: Citation) => {
-    // Si la cita apunta a otro documento, cámbialo primero
-    if (c.source && c.source !== source) {
-      onSourceChange(c.source)
-    }
-    // Navega a la página y resalta usando el texto de la cita
-    if (typeof c.page === 'number') {
-      onJumpToPage(c.page, c.source ?? source, c.text)
-    }
+    if (c.source && c.source !== source) onSourceChange(c.source)
+    if (typeof c.page === 'number') onJumpToPage(c.page, c.source ?? source, c.text)
   }
 
   return (
-    // Altura fija + layout en columnas para que solo la respuesta haga scroll
     <div className="flex h-[72vh] flex-col rounded-2xl border bg-white p-4 shadow-sm">
-      {/* Encabezado */}
       <div className="mb-3 flex items-center gap-2 text-sm text-gray-600">
         <Sparkles className="h-4 w-4 text-brand-600" />
-        Haz preguntas sobre tus documentos. Respuesta siempre en el idioma de la pregunta.
+        Haz preguntas sobre tus documentos. Respuesta en el idioma de la pregunta.
       </div>
 
-      {/* Formulario */}
       <div className="grid gap-3 md:grid-cols-3">
         <div className="md:col-span-2">
           <label className="text-sm text-gray-700">Pregunta</label>
@@ -73,18 +67,17 @@ export default function AskPanel({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKey}
-            placeholder="¿Cuál es el total a pagar y la fecha de emisión?"
+            placeholder="¿Cuál es el RUC, la fecha de autorización y el total?"
             className="mt-1 w-full resize-y rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             rows={3}
           />
           <div className="mt-1 text-xs text-gray-400">Sugerencia: Ctrl/⌘ + Enter para enviar</div>
         </div>
         <div>
-          <SourcesSelect value={source} onChange={(v) => { onSourceChange(v); }} />
+          <SourcesSelect value={source} onChange={onSourceChange} />
         </div>
       </div>
 
-      {/* Botón enviar */}
       <div className="mt-3 flex justify-end">
         <button
           onClick={submit}
@@ -96,7 +89,6 @@ export default function AskPanel({
         </button>
       </div>
 
-      {/* Área de respuesta: ocupa el resto y SOLO aquí hay scroll */}
       <div className="mt-4 flex-1 min-h-0">
         <div className="h-full overflow-y-auto rounded-xl border bg-brand-50 p-4 text-brand-900">
           <div className="text-sm font-semibold">Respuesta</div>
