@@ -28,10 +28,9 @@ export default function SourcesSelect({
       <label className="text-sm text-gray-700">Documento</label>
       <select
         className="mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-        value={value || ''}
+        value={value ?? (options.length ? options[0] : '')}
         onChange={e => onChange(e.target.value || undefined)}
       >
-        <option value="">(todo el corpus)</option>
         {options.map(name => (
           <option key={name} value={name}>{name}</option>
         ))}

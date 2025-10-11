@@ -102,6 +102,100 @@ def _ensure_dim_match(index, qv: np.ndarray):
 # Recuperación híbrida + rerank
 # =====================
 
+def _diversify_results(
+    candidates: List[Tuple[int, float, str]],
+    sources: List[str],
+    max_per_source: int = 3
+) -> List[Tuple[int, float, str]]:
+    """
+    Diversifica resultados para incluir múltiples fuentes.
+    Útil cuando se busca en todo el corpus.
+    """
+    source_counts = {}
+    diversified = []
+    
+    for cand in candidates:
+        idx = cand[0]
+        source = sources[idx] if idx < len(sources) else None
+        
+        if source not in source_counts:
+            source_counts[source] = 0
+        
+        # Limitar chunks por fuente para forzar diversidad
+        if source_counts[source] < max_per_source:
+            diversified.append(cand)
+            source_counts[source] += 1
+    
+    return diversified
+
+def _balanced_diversify(
+    candidates: List[Tuple[int, float, str]],
+    sources: List[str],
+    k: int
+) -> List[Tuple[int, float, str]]:
+    """
+    Diversificación BALANCEADA: Todos los documentos tienen igual importancia.
+    
+    Estrategia:
+    1. Agrupa candidatos por documento
+    2. Selecciona el mejor chunk de cada documento (round-robin)
+    3. Repite hasta llenar k slots
+    
+    Esto asegura que TODOS los documentos tengan la misma probabilidad
+    de aparecer, independientemente de su tamaño.
+    """
+    # Agrupar candidatos por fuente
+    by_source = {}
+    for cand in candidates:
+        idx = cand[0]
+        source = sources[idx] if idx < len(sources) else None
+        if source not in by_source:
+            by_source[source] = []
+        by_source[source].append(cand)
+    
+    # Obtener lista de fuentes ordenadas alfabéticamente para consistencia
+    available_sources = sorted(by_source.keys())
+    num_sources = len(available_sources)
+    
+    if num_sources == 0:
+        return []
+    
+    print(f"[RAG] Balanceo: {num_sources} fuentes, distribuyendo {k} slots equitativamente")
+    
+    # Distribuir slots equitativamente entre fuentes (round-robin)
+    balanced = []
+    round_num = 0
+    
+    while len(balanced) < k:
+        added_this_round = 0
+        
+        for source in available_sources:
+            # Si ya tenemos suficientes, salir
+            if len(balanced) >= k:
+                break
+            
+            # Si esta fuente aún tiene candidatos en esta ronda
+            if round_num < len(by_source[source]):
+                balanced.append(by_source[source][round_num])
+                added_this_round += 1
+        
+        # Si no agregamos nada en esta ronda, todas las fuentes se agotaron
+        if added_this_round == 0:
+            break
+        
+        round_num += 1
+    
+    # Calcular distribución final
+    from collections import Counter
+    final_sources = [sources[idx] for idx, _, _ in balanced]
+    distribution = Counter(final_sources)
+    
+    print(f"[RAG] Distribución balanceada:")
+    for source, count in distribution.most_common():
+        print(f"      - {source[:50]}: {count} chunks")
+    
+    return balanced[:k]
+
 def search(
     index,
     chunks: List[str],
@@ -110,13 +204,21 @@ def search(
     *,
     sources: Optional[List[str]] = None,
     filter_source: Optional[str] = None,
+    diversify: bool = True,
 ) -> List[Tuple[int, float, str]]:
     """
     Devuelve [(idx_chunk, score, texto_chunk)] ya rerankeados con cross-encoder.
-    Si filter_source se proporciona, aplica filtro estricto por nombre de archivo.
+    Si `filter_source` se proporciona, aplica filtro estricto por nombre de archivo.
+    Nota: la API de nivel superior ahora exige un `filter_source` válido.
     """
     if not chunks:
         return []
+    
+    # Exigir un filtro de documento explícito (no se permite 'todo el corpus')
+    if not filter_source or not filter_source.strip():
+        raise ValueError("Se requiere un 'filter_source' válido. La búsqueda en 'todo el corpus' ya no está permitida.")
+    filter_mode = f"'{filter_source}'"
+    print(f"[RAG] Búsqueda: filter_source={filter_mode}, total_chunks={len(chunks)}")
 
     # 1) Vectorial de alto recall
     emb = _load_embedder()
@@ -139,14 +241,38 @@ def search(
             seen.add(cand[0])
 
     # 4) Filtro por archivo (exacto -> contiene)
-    if filter_source and sources:
+    # Solo filtra si filter_source tiene valor real (no None, no vacío)
+    if filter_source and filter_source.strip() and sources:
         fs = filter_source.strip().lower()
+        print(f"[RAG] Aplicando filtro: '{fs}'")
+        # Primero intenta match exacto
         exact = [c for c in merged if (sources[c[0]] or "").lower() == fs]
+        # Si no hay match exacto, intenta match parcial (contiene)
         if not exact:
             exact = [c for c in merged if fs in (sources[c[0]] or "").lower()]
-        merged = exact
-        if not merged:
+        # Solo aplica el filtro si encontró resultados
+        if exact:
+            print(f"[RAG] Filtro aplicado: {len(merged)} → {len(exact)} chunks")
+            merged = exact
+        else:
+            # Si no hay resultados con el filtro, devolver vacío
+            # (el usuario pidió un archivo específico que no existe)
+            print(f"[RAG] ⚠️  Sin resultados para filtro '{fs}'")
             return []
+    else:
+        print(f"[RAG] Sin filtro - buscando en {len(merged)} chunks del corpus completo")
+
+    # 4.5) Diversificación (si el llamador la solicita explícitamente)
+    if diversify and sources and not (filter_source and filter_source.strip()):
+        unique_sources = len(set(sources))
+        if unique_sources > 1:
+            # Aumentar k MUCHO más para tener candidatos de TODAS las fuentes
+            expanded_k = min(k * 10, len(merged))  # ✅ k*10 para asegurar cobertura de todas las fuentes
+            
+            # ✅ BALANCEO EQUITATIVO: Todos los documentos tienen misma importancia
+            # Usa round-robin para distribuir slots equitativamente entre fuentes
+            merged = _balanced_diversify(merged[:expanded_k], sources, k)
+            print(f"[RAG] Diversificación BALANCEADA: {unique_sources} fuentes con igual peso")
 
     # 5) Rerank cross-encoder y recorte a k
     rer = _get_reranker()

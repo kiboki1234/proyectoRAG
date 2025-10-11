@@ -3,7 +3,7 @@ import Header from '@/components/Header'
 import SettingsModal from '@/components/SettingsModal'
 import UploadZone from '@/components/UploadZone'
 import AskPanel from '@/components/AskPanel'
-import PdfPreview from '@/components/PdfPreview'
+import DocumentPreview from '@/components/DocumentPreview'
 
 export default function App() {
   const [openSettings, setOpenSettings] = useState(false)
@@ -31,7 +31,7 @@ export default function App() {
         <UploadZone />
 
         <div className="grid gap-6 md:grid-cols-2">
-          <PdfPreview source={selectedSource} page={selectedPage} highlight={highlight} />
+          <DocumentPreview source={selectedSource} page={selectedPage} highlight={highlight} />
           <AskPanel source={selectedSource} onSourceChange={changeSource} onJumpToPage={handleJumpToPage} />
         </div>
 

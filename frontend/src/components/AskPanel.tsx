@@ -23,6 +23,7 @@ export default function AskPanel({
   const submit = async () => {
     const q = question.trim()
     if (!q) return toast.info('Escribe una pregunta')
+    if (!source) return toast.info('Selecciona un documento antes de preguntar')
     try {
       setLoading(true)
       // Limpia el estado para evitar arrastre de textos antiguos
