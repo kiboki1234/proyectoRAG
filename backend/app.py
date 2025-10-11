@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -400,16 +400,26 @@ async def ask(request: Request, req: AskRequest):
     Recupera pasajes relevantes y genera respuesta con el LLM local.
     Respuestas siempre en el idioma de la pregunta.
     Usa caché para queries frecuentes.
+    
+    Nuevas features:
+    - source=None o "*" busca en TODO el corpus con diversificación
+    - temperature auto-detectada según tipo de pregunta (o manual)
+    - search_mode configurable: single/multi/auto
     """
     try:
         # Intentar obtener del caché
+        cached_response = None
         if query_cache:
             cached_response = query_cache.get(req.question, req.source)
             if cached_response:
                 app_logger.info(f"✅ Cache hit para: {req.question[:50]}...")
+                # Marcar como cacheado
+                if isinstance(cached_response, dict):
+                    cached_response['cached'] = True
+                    return AskResponse(**cached_response)
                 return cached_response
         
-        app_logger.info(f"🔍 Query: {req.question[:100]}... | Source: {req.source}")
+        app_logger.info(f"🔍 Query: {req.question[:100]}... | Source: {req.source or 'TODO EL CORPUS'}")
         
         # Carga segura del índice
         try:
@@ -417,16 +427,21 @@ async def ask(request: Request, req: AskRequest):
         except FileNotFoundError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-        # Normaliza el filtro por archivo y exigir valor válido
-        source_param = (req.source or "").strip()
-        if not source_param:
-            raise HTTPException(status_code=400, detail="Debes especificar un documento (no se permite 'todo el corpus').")
-
+        # Determinar modo de búsqueda
+        search_mode = req.search_mode or "auto"
+        if search_mode == "auto":
+            # Si hay source específico → single, sino → multi
+            search_mode = "single" if req.source else "multi"
+        
+        diversify = (search_mode == "multi")
+        
         app_logger.info(
-            f"🔍 Búsqueda RAG - Question: {req.question[:100]}... | Filter: '{source_param}' | Total docs: {len(set(sources))}"
+            f"🔍 Búsqueda RAG - Question: {req.question[:100]}... | "
+            f"Filter: {req.source or 'TODO'} | Search mode: {search_mode} | "
+            f"Total docs: {len(set(sources))}"
         )
 
-        # Recuperación híbrida + rerank (siempre se requiere un documento específico)
+        # Recuperación híbrida + rerank
         k_value = settings.top_k
 
         passages = rag.search(
@@ -435,28 +450,33 @@ async def ask(request: Request, req: AskRequest):
             req.question,
             k=k_value,
             sources=sources,
-            filter_source=source_param,
-            diversify=False,  # No diversificar automáticamente
+            filter_source=req.source,
+            diversify=diversify,
         )
         
         app_logger.info(
             f"🎯 Recuperados {len(passages)} pasajes "
-            f"(k={k_value}, diversify=False, "
+            f"(k={k_value}, diversify={diversify}, "
             f"fuentes: {len(set(sources[p[0]] for p in passages))})"
         )
         
         if not passages:
-            if source_param:
-                detail = f"No hay pasajes relevantes en el documento '{source_param}' para esta pregunta"
-            else:
-                detail = "No hay pasajes relevantes en el corpus para esta pregunta"
+            detail = f"No hay pasajes relevantes en {'el documento ' + req.source if req.source else 'el corpus'} para esta pregunta"
             app_logger.warning(f"⚠️  Sin resultados: {detail}")
             raise HTTPException(status_code=404, detail=detail)
+
+        # Auto-detectar temperatura si no se especificó
+        temperature = req.temperature
+        if temperature is None:
+            temperature = rag._auto_detect_temperature(req.question)
+            app_logger.info(f"🌡️  Temperatura auto-detectada: {temperature}")
+        else:
+            app_logger.info(f"🌡️  Temperatura manual: {temperature}")
 
         # LLM y prompt con clipping por tokens reales
         llm = rag._load_llm()
         prompt = rag.build_prompt_clipped(llm, req.question, passages)
-        answer = rag.generate_answer(llm, prompt, temp=0.0)
+        answer = rag.generate_answer(llm, prompt, temp=temperature)
 
         # Citas (manteniendo índices alineados)
         citations: List[Citation] = []
@@ -473,14 +493,20 @@ async def ask(request: Request, req: AskRequest):
                 )
             )
 
-        response = AskResponse(answer=answer, citations=citations)
+        response = AskResponse(
+            answer=answer,
+            citations=citations,
+            cached=False,
+            search_mode_used=search_mode,
+            temperature_used=temperature
+        )
         
         # Cachear la respuesta
         if query_cache:
             query_cache.set(req.question, response, req.source)
             app_logger.info(f"💾 Respuesta cacheada")
         
-        app_logger.info(f"✅ Respuesta generada con {len(citations)} citas")
+        app_logger.info(f"✅ Respuesta generada con {len(citations)} citas (temp={temperature})")
         return response
         
     except HTTPException:
@@ -488,6 +514,131 @@ async def ask(request: Request, req: AskRequest):
     except Exception as e:
         app_logger.error(f"Error en /ask: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
+
+
+@app.post("/ask/stream")
+@limiter.limit(f"{settings.rate_limit_per_minute}/minute")
+async def ask_stream(request: Request, req: AskRequest):
+    """
+    Versión streaming del endpoint /ask.
+    Devuelve tokens uno por uno mediante Server-Sent Events (SSE).
+    
+    Formato del stream:
+    - event: token → data: {"token": "...", "done": false}
+    - event: citations → data: [citation1, citation2, ...]
+    - event: metadata → data: {"cached": false, "search_mode": "single", "temperature": 0.0}
+    - event: done → data: {"done": true}
+    """
+    try:
+        # Verificar caché primero
+        if query_cache:
+            cached = query_cache.get(req.question, req.source)
+            if cached:
+                app_logger.info(f"✅ Cache hit (stream) para: {req.question[:50]}...")
+                # Enviar respuesta cacheada de golpe
+                async def send_cached():
+                    import json
+                    # Metadata
+                    yield f"event: metadata\ndata: {json.dumps({'cached': True, 'search_mode_used': getattr(cached, 'search_mode_used', 'single'), 'temperature_used': getattr(cached, 'temperature_used', 0.0)})}\n\n"
+                    # Respuesta completa
+                    answer = cached.answer if hasattr(cached, 'answer') else str(cached)
+                    for char in answer:
+                        yield f"event: token\ndata: {json.dumps({'token': char, 'done': False})}\n\n"
+                    # Citas
+                    citations = cached.citations if hasattr(cached, 'citations') else []
+                    if citations:
+                        yield f"event: citations\ndata: {json.dumps([c.dict() if hasattr(c, 'dict') else c for c in citations])}\n\n"
+                    # Fin
+                    yield f"event: done\ndata: {json.dumps({'done': True})}\n\n"
+                return StreamingResponse(send_cached(), media_type="text/event-stream")
+        
+        # Generar respuesta streaming
+        async def generate():
+            import json
+            try:
+                # Cargar índice
+                index, chunks, sources, pages = ingest.load_index_safe()
+                
+                # Determinar modo de búsqueda
+                search_mode = req.search_mode or "auto"
+                if search_mode == "auto":
+                    search_mode = "single" if req.source else "multi"
+                diversify = (search_mode == "multi")
+                
+                # Recuperar pasajes
+                passages = rag.search(
+                    index, chunks, req.question,
+                    k=settings.top_k,
+                    sources=sources,
+                    filter_source=req.source,
+                    diversify=diversify,
+                )
+                
+                if not passages:
+                    yield f"event: error\ndata: {json.dumps({'error': 'No se encontraron pasajes relevantes'})}\n\n"
+                    return
+                
+                # Auto-detectar temperatura
+                temperature = req.temperature if req.temperature is not None else rag._auto_detect_temperature(req.question)
+                
+                # Enviar metadata
+                yield f"event: metadata\ndata: {json.dumps({'cached': False, 'search_mode_used': search_mode, 'temperature_used': temperature})}\n\n"
+                
+                # Generar respuesta token por token
+                llm = rag._load_llm()
+                prompt = rag.build_prompt_clipped(llm, req.question, passages)
+                
+                # Streaming nativo de llama.cpp
+                full_answer = ""
+                for output in llm(
+                    prompt,
+                    max_tokens=rag._safe_max_new_tokens(llm, prompt),
+                    temperature=temperature,
+                    stop=["</s>"],
+                    stream=True
+                ):
+                    token = output["choices"][0]["text"]
+                    full_answer += token
+                    yield f"event: token\ndata: {json.dumps({'token': token, 'done': False})}\n\n"
+                
+                # Citas
+                citations_data = []
+                for i, s, t in passages:
+                    src_name = sources[i] if 0 <= i < len(sources) else None
+                    pg = pages[i] if 0 <= i < len(pages) else None
+                    citations_data.append({
+                        "id": int(i),
+                        "score": float(s),
+                        "text": t[:400],
+                        "page": pg,
+                        "source": src_name
+                    })
+                
+                yield f"event: citations\ndata: {json.dumps(citations_data)}\n\n"
+                
+                # Cachear respuesta completa
+                if query_cache and full_answer:
+                    response_obj = AskResponse(
+                        answer=full_answer.strip(),
+                        citations=[Citation(**c) for c in citations_data],
+                        cached=False,
+                        search_mode_used=search_mode,
+                        temperature_used=temperature
+                    )
+                    query_cache.set(req.question, response_obj, req.source)
+                
+                # Fin
+                yield f"event: done\ndata: {json.dumps({'done': True})}\n\n"
+                
+            except Exception as e:
+                app_logger.error(f"Error en streaming: {e}", exc_info=True)
+                yield f"event: error\ndata: {json.dumps({'error': str(e)})}\n\n"
+        
+        return StreamingResponse(generate(), media_type="text/event-stream")
+        
+    except Exception as e:
+        app_logger.error(f"Error en /ask/stream: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # -------------------------

@@ -208,17 +208,22 @@ def search(
 ) -> List[Tuple[int, float, str]]:
     """
     Devuelve [(idx_chunk, score, texto_chunk)] ya rerankeados con cross-encoder.
-    Si `filter_source` se proporciona, aplica filtro estricto por nombre de archivo.
-    Nota: la API de nivel superior ahora exige un `filter_source` válido.
+    
+    Args:
+        filter_source: Nombre del archivo para filtrar. None o "*" busca en todo el corpus.
+        diversify: Si True y hay múltiples fuentes, balancea resultados entre documentos.
+    
+    Comportamiento:
+    - filter_source válido → búsqueda en UN documento específico
+    - filter_source None/vacío → búsqueda en TODOS los documentos (con diversificación opcional)
     """
     if not chunks:
         return []
     
-    # Exigir un filtro de documento explícito (no se permite 'todo el corpus')
-    if not filter_source or not filter_source.strip():
-        raise ValueError("Se requiere un 'filter_source' válido. La búsqueda en 'todo el corpus' ya no está permitida.")
-    filter_mode = f"'{filter_source}'"
-    print(f"[RAG] Búsqueda: filter_source={filter_mode}, total_chunks={len(chunks)}")
+    # Determinar modo de búsqueda
+    search_in_corpus = not filter_source or not filter_source.strip()
+    filter_mode = "todo el corpus" if search_in_corpus else f"'{filter_source}'"
+    print(f"[RAG] Búsqueda: filter_source={filter_mode}, total_chunks={len(chunks)}, diversify={diversify}")
 
     # 1) Vectorial de alto recall
     emb = _load_embedder()
@@ -240,8 +245,7 @@ def search(
             merged.append(cand)
             seen.add(cand[0])
 
-    # 4) Filtro por archivo (exacto -> contiene)
-    # Solo filtra si filter_source tiene valor real (no None, no vacío)
+    # 4) Filtro por archivo (si se especificó)
     if filter_source and filter_source.strip() and sources:
         fs = filter_source.strip().lower()
         print(f"[RAG] Aplicando filtro: '{fs}'")
@@ -256,21 +260,19 @@ def search(
             merged = exact
         else:
             # Si no hay resultados con el filtro, devolver vacío
-            # (el usuario pidió un archivo específico que no existe)
             print(f"[RAG] ⚠️  Sin resultados para filtro '{fs}'")
             return []
     else:
         print(f"[RAG] Sin filtro - buscando en {len(merged)} chunks del corpus completo")
 
-    # 4.5) Diversificación (si el llamador la solicita explícitamente)
-    if diversify and sources and not (filter_source and filter_source.strip()):
+    # 4.5) Diversificación (si hay múltiples fuentes y se solicita)
+    if diversify and sources and search_in_corpus:
         unique_sources = len(set(sources))
         if unique_sources > 1:
-            # Aumentar k MUCHO más para tener candidatos de TODAS las fuentes
-            expanded_k = min(k * 10, len(merged))  # ✅ k*10 para asegurar cobertura de todas las fuentes
+            # Aumentar k para tener candidatos de TODAS las fuentes
+            expanded_k = min(k * 10, len(merged))
             
-            # ✅ BALANCEO EQUITATIVO: Todos los documentos tienen misma importancia
-            # Usa round-robin para distribuir slots equitativamente entre fuentes
+            # Balanceo equitativo entre fuentes
             merged = _balanced_diversify(merged[:expanded_k], sources, k)
             print(f"[RAG] Diversificación BALANCEADA: {unique_sources} fuentes con igual peso")
 
@@ -294,6 +296,49 @@ def _tok_len(llm: Llama, text: str) -> int:
         return len(llm.tokenize(text.encode("utf-8")))
     except Exception:
         return int(len(re.findall(r"\S+", text)) / 0.7) + 1
+
+def _auto_detect_temperature(question: str) -> float:
+    """
+    Auto-detecta la temperatura óptima según el tipo de pregunta.
+    
+    Heurísticas:
+    - Preguntas con números/fechas/datos específicos → temp=0.0 (factual)
+    - Preguntas de análisis/opinión/resumen → temp=0.3-0.5 (balanceado)
+    - Preguntas creativas/sugerencias → temp=0.7 (creativo)
+    """
+    q_lower = question.lower().strip()
+    
+    # Factual (temp=0.0): preguntas con "cuál", "qué", "cuánto", "fecha", números
+    factual_indicators = [
+        r'\bcuál\b', r'\bqué\b', r'\bcuánto', r'\bcuándo\b',
+        r'\bfecha\b', r'\bnúmero\b', r'\bruc\b', r'\bcédula\b',
+        r'\btotal\b', r'\bprecio\b', r'\bmonto\b', r'\bvalor\b',
+        r'\bnombre\b', r'\bdirección\b', r'\bteléfono\b',
+        r'\d{2,}',  # contiene números
+    ]
+    if any(re.search(pattern, q_lower) for pattern in factual_indicators):
+        return 0.0
+    
+    # Creativo (temp=0.7): preguntas con "sugiere", "recomienda", "ideas", "cómo podría"
+    creative_indicators = [
+        r'\bsugiere\b', r'\brecomienda\b', r'\bideas?\b',
+        r'\bcómo podría\b', r'\balternativas?\b', r'\bopciones?\b',
+        r'\bimaginemos\b', r'\bpropón\b', r'\bdiseña\b',
+    ]
+    if any(re.search(pattern, q_lower) for pattern in creative_indicators):
+        return 0.7
+    
+    # Analítico (temp=0.3): preguntas con "explica", "resume", "compara", "analiza"
+    analytical_indicators = [
+        r'\bexplica\b', r'\bresume\b', r'\bcompara\b', r'\banaliza\b',
+        r'\bpor qué\b', r'\bcómo funciona\b', r'\bdiferencia\b',
+        r'\brelación\b', r'\bimpacto\b', r'\bconclusión\b',
+    ]
+    if any(re.search(pattern, q_lower) for pattern in analytical_indicators):
+        return 0.3
+    
+    # Default: balanceado
+    return 0.2
 
 def _safe_max_new_tokens(llm: Llama, prompt: str, *, min_answer: int = 32) -> int:
     """Máx. tokens de salida que caben sin pasar N_CTX."""

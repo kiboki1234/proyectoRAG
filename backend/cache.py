@@ -173,14 +173,14 @@ class QueryCache:
         """
         with self._lock:
             total = self._hits + self._misses
-            hit_rate = (self._hits / total * 100) if total > 0 else 0.0
+            hit_rate = (self._hits / total) if total > 0 else 0.0
             
             return {
                 "size": len(self._cache),
                 "max_size": self._max_size,
-                "hits": self._hits,
-                "misses": self._misses,
-                "hit_rate": round(hit_rate, 2),
+                "total_hits": self._hits,
+                "total_misses": self._misses,
+                "hit_rate": hit_rate,
                 "default_ttl": self._default_ttl
             }
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Header from '@/components/Header'
 import SettingsModal from '@/components/SettingsModal'
 import UploadZone from '@/components/UploadZone'
-import AskPanel from '@/components/AskPanel'
+import ChatPanel from '@/components/ChatPanel'
 import DocumentPreview from '@/components/DocumentPreview'
 
 export default function App() {
@@ -32,7 +32,7 @@ export default function App() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <DocumentPreview source={selectedSource} page={selectedPage} highlight={highlight} />
-          <AskPanel source={selectedSource} onSourceChange={changeSource} onJumpToPage={handleJumpToPage} />
+          <ChatPanel source={selectedSource} onSourceChange={changeSource} onJumpToPage={handleJumpToPage} />
         </div>
 
         <p className="text-center text-xs text-gray-400">

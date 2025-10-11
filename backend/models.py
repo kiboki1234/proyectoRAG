@@ -13,7 +13,17 @@ class AskRequest(BaseModel):
     source: Optional[str] = Field(
         None, 
         max_length=255,
-        description="Nombre (o parte) del archivo a filtrar"
+        description="Nombre (o parte) del archivo a filtrar. None o '*' busca en todo el corpus"
+    )
+    temperature: Optional[float] = Field(
+        None,
+        ge=0.0,
+        le=2.0,
+        description="Temperatura para generación (0.0=factual, 0.7=creativo). Auto-detecta si no se especifica"
+    )
+    search_mode: Optional[str] = Field(
+        "auto",
+        description="Modo de búsqueda: 'single' (un doc), 'multi' (varios docs balanceados), 'auto' (detecta por source)"
     )
     
     @field_validator('question')
@@ -29,14 +39,25 @@ class AskRequest(BaseModel):
     @classmethod
     def validate_source(cls, v: Optional[str]) -> Optional[str]:
         """Valida y sanitiza el nombre del archivo"""
-        if v is None:
-            return None
+        if v is None or v == "*":
+            return None  # Buscar en todo el corpus
         v = v.strip()
         if not v:
             return None
         # Sanitización básica para prevenir path traversal
         if '..' in v or '/' in v or '\\' in v:
             raise ValueError("Nombre de archivo inválido")
+        return v
+    
+    @field_validator('search_mode')
+    @classmethod
+    def validate_search_mode(cls, v: Optional[str]) -> str:
+        """Valida el modo de búsqueda"""
+        if v is None:
+            return "auto"
+        v = v.lower().strip()
+        if v not in ["single", "multi", "auto"]:
+            raise ValueError("search_mode debe ser 'single', 'multi' o 'auto'")
         return v
 
 class Citation(BaseModel):
@@ -51,6 +72,9 @@ class AskResponse(BaseModel):
     """Response model para queries al sistema RAG"""
     answer: str = Field(..., description="Respuesta generada por el LLM")
     citations: List[Citation] = Field(default_factory=list, description="Lista de citas")
+    cached: bool = Field(default=False, description="Si la respuesta vino del caché")
+    search_mode_used: str = Field(default="single", description="Modo de búsqueda utilizado")
+    temperature_used: float = Field(default=0.0, description="Temperatura utilizada en generación")
 
 class HealthResponse(BaseModel):
     """Response model para health check"""
