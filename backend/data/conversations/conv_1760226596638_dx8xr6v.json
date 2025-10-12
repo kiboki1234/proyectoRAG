@@ -1,7 +1,7 @@
 {
   "id": "conv_1760226596638_dx8xr6v",
   "created_at": "2025-10-11T19:12:43.716104",
-  "updated_at": "2025-10-11T19:58:32.241288",
+  "updated_at": "2025-10-11T20:59:06.250177",
   "messages": [
     {
       "id": "user-1760227885583",
@@ -421,6 +421,462 @@
       ],
       "timestamp": "2025-10-12T00:56:59.716Z",
       "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760231349752",
+      "role": "user",
+      "content": "cuanto dura la carta de compromiso segun el documento ?",
+      "timestamp": "2025-10-12T01:09:09.752Z"
+    },
+    {
+      "id": "assistant-1760231349752",
+      "role": "assistant",
+      "content": " La Carta Compromiso no especifica una duración explícita en los fragmentos proporcionados. Por lo tanto, no hay información suficiente para responder exactamente cuánto dura la carta de compromiso según el documento.",
+      "citations": [
+        {
+          "id": 6,
+          "score": 0.7918204251925149,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.7483333333333333,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 9,
+          "score": 0.7439588093757629,
+          "text": "2\n3. Asistir puntualmente y cumplir con el horario acordado para la realización de las Prácticas\nPreprofesionales. 4. Informar de inmediato cualquier inconveniente que afecte el desarrollo de sus actividades. 5. Presentar los informes requeridos por la Institución al término de la práctica. CUARTA.-DURACION\nLa presente Carta Compromiso tendrá una duración: Desde 19/09/2025 hasta 23/01/2026 conform",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.7123610659440358,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.6349334510167439,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 5,
+          "score": 0.5540343415737152,
+          "text": "La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglamento de Régimen Académico y en función de que los sectores sociales, productivos y\nculturales guardan estrecha relación con las Instituciones de",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 4,
+          "score": 0.48209320425987245,
+          "text": "La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglam",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T01:09:09.752Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760231447104",
+      "role": "user",
+      "content": "entonces cuanto dura el proyecto o el trabajo que realizaran",
+      "timestamp": "2025-10-12T01:10:47.104Z"
+    },
+    {
+      "id": "assistant-1760231447104",
+      "role": "assistant",
+      "content": " La duración del proyecto o trabajo que se realizará, según lo especificado en la Carta Compromiso, será desde el 19 de septiembre de 2025 hasta el 23 de enero de 2026. (Fragmento 1: Cuarta.-Duración)",
+      "citations": [
+        {
+          "id": 9,
+          "score": 0.7066666666666666,
+          "text": "2\n3. Asistir puntualmente y cumplir con el horario acordado para la realización de las Prácticas\nPreprofesionales. 4. Informar de inmediato cualquier inconveniente que afecte el desarrollo de sus actividades. 5. Presentar los informes requeridos por la Institución al término de la práctica. CUARTA.-DURACION\nLa presente Carta Compromiso tendrá una duración: Desde 19/09/2025 hasta 23/01/2026 conform",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 4,
+          "score": 0.5671548140048981,
+          "text": "La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglam",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.5617020809650421,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.5451753628253937,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.5282805943489075,
+          "text": "1550047656, estudiante de la Carrera de Ingeniería de Software, al tenor de las siguientes cláusulas:\nPRIMERA.- ANTECEDENTES. La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudian",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 7,
+          "score": 0.4744427386919658,
+          "text": "Designar un responsable que supervise, oriente y evalúe las actividades del Estudiante durante el período de\nprácticas. 3. Proporcionar al Estudiante la información necesaria sobre las políticas, normas y procedimientos internos\npara el cumplimiento de sus actividades. 4. Suscribir un convenio o contrato individual de pasantía para formalizar la relación con el Estudiante, en el\nque se especificar",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.46511029044787094,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T01:10:47.104Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760231559277",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:12:39.277Z"
+    },
+    {
+      "id": "assistant-1760231559277",
+      "role": "assistant",
+      "content": " El documento contiene un plan de actividades establecido por una Institución, así como normas internas que deben respetarse y una obligación de mantener confidencialidad sobre la información a la que se tiene acceso.",
+      "citations": [
+        {
+          "id": 8,
+          "score": 0.7383333333333333,
+          "text": "Cumplir con el plan de actividades establecido por la Institución. 2. Respetar las normas internas de la Institución y mantener confidencialidad sobre la información a la que\ntenga acceso.",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.4820403838157654,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.46697248935699465,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.4348658406734467,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.3806932353973389,
+          "text": "1550047656, estudiante de la Carrera de Ingeniería de Software, al tenor de las siguientes cláusulas:\nPRIMERA.- ANTECEDENTES. La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudian",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T01:12:39.277Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760231791458",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:16:31.458Z"
+    },
+    {
+      "id": "assistant-1760231791458",
+      "role": "assistant",
+      "content": " El documento contiene un plan de actividades establecido por una Institución, así como normas internas que deben respetarse y una obligación de mantener la confidencialidad sobre la información a la que se tiene acceso.",
+      "citations": [
+        {
+          "id": 8,
+          "score": 0.7383333333333333,
+          "text": "Cumplir con el plan de actividades establecido por la Institución. 2. Respetar las normas internas de la Institución y mantener confidencialidad sobre la información a la que\ntenga acceso.",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.4820403838157654,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.46697248935699465,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.4348658406734467,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.3806932353973389,
+          "text": "1550047656, estudiante de la Carrera de Ingeniería de Software, al tenor de las siguientes cláusulas:\nPRIMERA.- ANTECEDENTES. La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudian",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T01:16:31.458Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760232357522",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:25:57.522Z"
+    },
+    {
+      "id": "assistant-1760232357522",
+      "role": "assistant",
+      "content": " El documento contiene un plan de actividades establecido por una Institución, así como normas internas que deben respetarse y una obligación de mantener confidencialidad sobre la información a la que se tiene acceso.",
+      "citations": [
+        {
+          "id": 8,
+          "score": 0.7383333333333333,
+          "text": "Cumplir con el plan de actividades establecido por la Institución. 2. Respetar las normas internas de la Institución y mantener confidencialidad sobre la información a la que\ntenga acceso.",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.4820403838157654,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.46697248935699465,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.4348658406734467,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.3806932353973389,
+          "text": "1550047656, estudiante de la Carrera de Ingeniería de Software, al tenor de las siguientes cláusulas:\nPRIMERA.- ANTECEDENTES. La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudian",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T01:25:57.522Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760232731306",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:32:11.306Z"
+    },
+    {
+      "id": "assistant-1760232731306",
+      "role": "assistant",
+      "content": " No hay suficiente información en los fragmentos proporcionados para determinar exactamente qué es el documento o qué contenido específico se encuentra allí. Los fragmentos solo muestran texto relacionado a un asistente preciso especializado en análisis de documentos y sus reglas de funcionamiento.",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:32:11.306Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760232988433",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:36:28.433Z"
+    },
+    {
+      "id": "assistant-1760232988433",
+      "role": "assistant",
+      "content": " El contexto proporcionado no incluye ninguna descripción del documento ni de su contenido específico. Por lo tanto, no puedo responder sobre esas bases.",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:36:28.433Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760233723278",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:48:43.278Z"
+    },
+    {
+      "id": "assistant-1760233723278",
+      "role": "assistant",
+      "content": " El contexto proporcionado no incluye ningún documento ni fragmento suficiente para determinar su contenido o naturaleza. La pregunta pide una respuesta basada exclusivamente en los fragmentos anteriores, pero no se han proporcionados aquí. Por lo tanto, no puedo responder con precisión a la pregunta.",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:48:43.278Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760233822995",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:50:22.995Z"
+    },
+    {
+      "id": "assistant-1760233822995",
+      "role": "assistant",
+      "content": " El contexto actual no proporciona suficiente información sobre un documento específico o qué tipo de información contiene.",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:50:22.995Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760234218560",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:56:58.560Z"
+    },
+    {
+      "id": "assistant-1760234218560",
+      "role": "assistant",
+      "content": " Fragmento 1:\n```bash\n#!/bin/bash\n# Script para instalar paquetes con apt-get\n\necho \"Actualizando repositorios...\"\nsudo apt-get update -y\n\necho \"Instalando paquetes...\"\nsudo apt-get install -y \\\n    build-essential \\\n    git \\\n    software-properties-common \\\n    libmysqlclient-dev \\\n    libxml2-dev \\\n    zlib1g-dev \\\n    libcurl4-openssl-dev \\\n    libjansi-java \\\n    libfreetype6-dev \\\n    liblcms2-dev \\\n    libpng-dev \\\n    libtiff5-dev \\\n    gcc-multilib \\\n    make \\\n    cmake \\\n    libboost-program-options-dev \\\n    libboost-filesystem-dev \\\n    libboost-system-dev \\\n    libboost-test-dev \\\n    libeigen3-dev \\\n    libsuitesparse-dev \\\n    libatlas-",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:56:58.560Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760234311708",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:58:31.708Z"
+    },
+    {
+      "id": "assistant-1760234311708",
+      "role": "assistant",
+      "content": "Fragmento 1:\n```bash\n#!/bin/bash\n# Script para instalar paquetes con apt-get\n\necho \"Actualizando repositorios...\"\nsudo apt-get update -y\n\necho \"Instalando paquetes...\"\nsudo apt-get install -y \\\n    build-essential \\\n    git \\\n    software-properties-common \\\n    libmysqlclient-dev \\\n    libxml2-dev \\\n    zlib1g-dev \\\n    libcurl4-openssl-dev \\\n    libjansi-java \\\n    libfreetype6-dev \\\n    liblcms2-dev \\\n    libpng-dev \\\n    libtiff5-dev \\\n    gcc-multilib \\\n    make \\\n    cmake \\\n    libboost-program-options-dev \\\n    libboost-filesystem-dev \\\n    libboost-system-dev \\\n    libboost-test-dev \\\n    libeigen3-dev \\\n    libsuitesparse-dev \\\n    libatlas-",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:58:31.708Z",
+      "cached": true,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760234340997",
+      "role": "user",
+      "content": "de que es el documento o que informacion contienen?",
+      "timestamp": "2025-10-12T01:59:00.997Z"
+    },
+    {
+      "id": "assistant-1760234340998",
+      "role": "assistant",
+      "content": "Fragmento 1:\n```bash\n#!/bin/bash\n# Script para instalar paquetes con apt-get\n\necho \"Actualizando repositorios...\"\nsudo apt-get update -y\n\necho \"Instalando paquetes...\"\nsudo apt-get install -y \\\n    build-essential \\\n    git \\\n    software-properties-common \\\n    libmysqlclient-dev \\\n    libxml2-dev \\\n    zlib1g-dev \\\n    libcurl4-openssl-dev \\\n    libjansi-java \\\n    libfreetype6-dev \\\n    liblcms2-dev \\\n    libpng-dev \\\n    libtiff5-dev \\\n    gcc-multilib \\\n    make \\\n    cmake \\\n    libboost-program-options-dev \\\n    libboost-filesystem-dev \\\n    libboost-system-dev \\\n    libboost-test-dev \\\n    libeigen3-dev \\\n    libsuitesparse-dev \\\n    libatlas-",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.395,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T01:59:00.998Z",
+      "cached": true,
       "searchMode": "single",
       "temperature": 0.2
     }

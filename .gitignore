@@ -243,3 +243,4 @@ backend/data/models/embed/
 *.ckpt
 
 frontend/node_modules/
+backend/data/conversations/
