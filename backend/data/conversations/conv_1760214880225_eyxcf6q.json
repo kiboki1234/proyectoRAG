@@ -1,0 +1,115 @@
+{
+  "id": "conv_1760214880225_eyxcf6q",
+  "created_at": "2025-10-11T15:51:47.085254",
+  "updated_at": "2025-10-11T18:49:49.257005",
+  "messages": [
+    {
+      "id": "user-1760215896082",
+      "role": "user",
+      "content": "De que trata el documento",
+      "timestamp": "2025-10-11T20:51:36.082Z"
+    },
+    {
+      "id": "assistant-1760215896082",
+      "role": "assistant",
+      "content": "",
+      "citations": [],
+      "timestamp": "2025-10-11T20:51:36.082Z"
+    },
+    {
+      "id": "user-1760216500197",
+      "role": "user",
+      "content": "de que trata el documento",
+      "timestamp": "2025-10-11T21:01:40.197Z"
+    },
+    {
+      "id": "assistant-1760216500197",
+      "role": "assistant",
+      "content": " El documento trata sobre un curso en línea de Docker que se ofrecerá del 9 al 12 de julio, organizado por el Club de la ESPE-M. El curso incluirá certificados de participación, una plataforma virtual adecuada, colaboración de un docente para dictar el curso, difusión institucional en redes sociales, certificados digitales y soporte técnico para establecer una conexión.",
+      "citations": [
+        {
+          "id": 57,
+          "score": 0.7994477152824402,
+          "text": "- Certificados de \nparticipación \n- Plataforma virtual \nadecuada \n- Colaboración de un \ndocente para que dicte el \nCurso \nDel 9 al 12 de \njulio \nOnlines \nCurso de docker \nPor el club \n- Difusión institucional por \nredes de la ESPE-M \n- Certificados digitales \n- Soporte técnico para \nconexión estable \n \n \nFIRMA DE RESPONSABILIDAD \n \nDocente Instructor",
+          "page": 6,
+          "source": "2_informe_inicio_periodo_académico.docx.pdf"
+        },
+        {
+          "id": 54,
+          "score": 0.7981151342391968,
+          "text": "ec \n19 \nMarjorie \nJuleysi \nCedeño \nTuquerez \n175223120\n7 \nL00429314 Software \n3ro \n0959792882 \nmjcedeno5@espe.edu.ec \n20 \nMayeli \nScarleth Ortiz \nZambrano \n175187892\n5 \nL00405987 Software \n5to \n0982552172 \nmsortiz2@espe.edu.ec \n21 \nMartín \nMiloslav \nSuquillo \nTigasi \n172541289\n2 \nL00082511 Software \n3ro \n0998456107 mmsuquillo@espe.edu.ec \n22 \nMesias \nOrlando \nMariscal Oña \n172766926\n7 \nL00429184 S",
+          "page": 4,
+          "source": "2_informe_inicio_periodo_académico.docx.pdf"
+        }
+      ],
+      "timestamp": "2025-10-11T21:01:40.197Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760224998649",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-11T23:23:18.649Z"
+    },
+    {
+      "id": "assistant-1760224998649",
+      "role": "assistant",
+      "content": "",
+      "citations": [],
+      "timestamp": "2025-10-11T23:23:18.649Z"
+    },
+    {
+      "id": "user-1760225183028",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-11T23:26:23.028Z"
+    },
+    {
+      "id": "assistant-1760225183028",
+      "role": "assistant",
+      "content": " Este documento trata sobre una publicación en \"La Posta\" que ha generado una controversia debido a un título académico no verificado de un estudiante de la Universidad mencionada. La Universidad identificó al estudiante y confirmó la legitimidad de su título, pero se incumplió el derecho a la veracidad y rectificación según la Ley Orgánica de Comunicación. La Universidad contactó con la persona responsable de la publicación para arreglar una reunión.",
+      "citations": [
+        {
+          "id": 8168,
+          "score": 0.8045943379402161,
+          "text": "Este contenido ha sido publicado sin que la información haya sido verificada ni \ncontrastada con fuentes institucionales, lo cual ha generado afectaciones a la \nimagen, credibilidad y buen nombre de nuestra Universidad, que durante 103 \naños se ha ganado la confianza de la sociedad ecuatoriana a través de su trabajo \nacadémico, científico y ético. La Universidad identificó al estudiante al que per",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        },
+        {
+          "id": 8169,
+          "score": 0.8106833696365356,
+          "text": "La Universidad identificó al estudiante al que pertenece el título que aparece en \nel video. Tras la verificación correspondiente, se confirmó que dicho título fue \nlegalmente expedido, cuenta con todos los registros académicos completos y en \nregla, y que las personas que participaron en el proceso de titulación constan en \nlos distributivos institucionales de esos años, incluyendo personal milit",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        },
+        {
+          "id": 8170,
+          "score": 0.8067992925643921,
+          "text": "La publicación realizada por “La Posta” incumple lo dispuesto en los artículos 22, \n23 y 24 de la Ley Orgánica de Comunicación, que garantizan el derecho a recibir \ninformación veraz, el derecho a la rectificación y el derecho a la réplica. La Universidad realizó un acercamiento con la persona responsable de la \npublicación y se acordó una fecha y hora para mantener una reunión. Sin \nembargo, dich",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        }
+      ],
+      "timestamp": "2025-10-11T23:26:23.028Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760226249836",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-11T23:44:09.836Z"
+    },
+    {
+      "id": "assistant-1760226249836",
+      "role": "assistant",
+      "content": "",
+      "citations": [],
+      "timestamp": "2025-10-11T23:44:09.836Z"
+    }
+  ]
+}

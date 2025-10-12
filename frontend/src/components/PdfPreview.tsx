@@ -17,14 +17,14 @@ export default function PdfPreview({
 
   if (!source) {
     return (
-      <div className="flex h-[72vh] items-center justify-center rounded-2xl border bg-white p-4 text-sm text-gray-500 shadow-sm">
+      <div className="flex h-[72vh] items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 text-sm text-gray-500 dark:text-gray-400 shadow-sm">
         Selecciona un documento para previsualizarlo aquí.
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm overflow-hidden">
       {/* La key fuerza reload cuando cambia la URL (evita caches del iframe) */}
       <iframe key={url || 'empty'} src={url!} className="h-[72vh] w-full" />
     </div>

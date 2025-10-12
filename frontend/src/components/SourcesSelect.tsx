@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getSources, getDocuments, type DocumentsResponse } from '@/lib/api'
-import { getLocalSources } from '@/lib/storage'
 import { FileText, Loader2 } from 'lucide-react'
+import { documentEvents } from '@/lib/events'
 
 export default function SourcesSelect({
   value,
@@ -13,40 +13,45 @@ export default function SourcesSelect({
   const [remote, setRemote] = useState<string[]>([])
   const [docsInfo, setDocsInfo] = useState<DocumentsResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const locals = getLocalSources()
+
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      const [sources, docs] = await Promise.all([
+        getSources(),
+        getDocuments(),
+      ])
+      setRemote(sources)
+      setDocsInfo(docs)
+    } catch (e) {
+      // Fallback si falla
+      getSources().then(list => setRemote(list)).catch(() => {})
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    let alive = true
-    
-    const loadData = async () => {
-      try {
-        setLoading(true)
-        const [sources, docs] = await Promise.all([
-          getSources(),
-          getDocuments(),
-        ])
-        if (alive) {
-          setRemote(sources)
-          setDocsInfo(docs)
-        }
-      } catch (e) {
-        // Fallback si falla
-        if (alive) {
-          getSources().then(list => setRemote(list))
-        }
-      } finally {
-        if (alive) setLoading(false)
-      }
-    }
-
     loadData()
-    return () => { alive = false }
   }, [])
 
+  // Suscribirse a eventos de documentos para actualización en tiempo real
+  useEffect(() => {
+    const events: Array<'document-uploaded' | 'document-deleted' | 'documents-cleared'> = 
+      ['document-uploaded', 'document-deleted', 'documents-cleared']
+    
+    events.forEach(event => documentEvents.on(event, loadData))
+    
+    return () => {
+      events.forEach(event => documentEvents.off(event, loadData))
+    }
+  }, [])
+
+  // 🔧 FIX: Solo usar documentos del backend (remote)
+  // No usar localStorage para evitar mostrar docs borrados
   const options = useMemo(() => {
-    const set = new Set<string>([...locals, ...remote].filter(Boolean))
-    return Array.from(set).sort()
-  }, [locals, remote])
+    return remote.filter(Boolean).sort()
+  }, [remote])
 
   const getDocInfo = (docName: string) => {
     if (!docsInfo) return null

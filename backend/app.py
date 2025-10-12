@@ -2,11 +2,13 @@ from pathlib import Path
 from typing import List
 import mimetypes
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -14,10 +16,12 @@ from slowapi.errors import RateLimitExceeded
 from config import get_settings
 from models import (
     AskRequest, AskResponse, Citation, HealthResponse, 
-    StatsResponse, IngestResponse, ErrorResponse
+    StatsResponse, IngestResponse, ErrorResponse, FeedbackRequest
 )
 from logger import setup_app_logger, get_logger
 from cache import get_query_cache
+from conversation import ConversationManager
+from feedback import FeedbackManager
 import ingest
 import rag
 import numpy as np
@@ -46,6 +50,15 @@ query_cache = get_query_cache(
     ttl=settings.cache_ttl_seconds
 ) if settings.enable_cache else None
 
+# Conversation Manager
+conversation_manager = ConversationManager(
+    storage_dir=settings.data_dir / "conversations"
+)
+
+# Feedback Manager
+feedback_manager = FeedbackManager(
+    storage_path=settings.data_dir / "feedback" / "feedback.jsonl"
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -86,6 +99,48 @@ app = FastAPI(
 # Rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Exception handlers globales
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handler para errores de validación (422)"""
+    app_logger.warning(f"Validation error on {request.url.path}: {exc.errors()}")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "code": "VALIDATION_ERROR",
+            "message": "Los datos enviados no son válidos",
+            "details": exc.errors(),
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Handler para HTTPExceptions (4xx, 5xx)"""
+    app_logger.warning(f"HTTP {exc.status_code} on {request.url.path}: {exc.detail}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "code": f"HTTP_{exc.status_code}",
+            "message": exc.detail,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Handler global para errores no manejados (500)"""
+    app_logger.error(f"Unhandled error on {request.url.path}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "code": "INTERNAL_ERROR",
+            "message": "Error interno del servidor",
+            "details": str(exc) if settings.debug else None,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
 
 # CORS con origins específicos
 app.add_middleware(
@@ -192,7 +247,15 @@ def get_stats():
             embedder_model=settings.embedding_model_id
         )
     except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Índice no encontrado. Ingesta documentos primero.")
+        # Si no existe el índice, devolver estadísticas vacías
+        app_logger.info("Índice no encontrado, devolviendo estadísticas vacías")
+        return StatsResponse(
+            total_documents=0,
+            total_chunks=0,
+            avg_chunk_size=0.0,
+            index_dimension=None,
+            embedder_model=settings.embedding_model_id
+        )
     except Exception as e:
         app_logger.error(f"Error obteniendo estadísticas: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
@@ -223,32 +286,60 @@ def clear_cache():
 def list_documents():
     """
     Lista todos los documentos indexados con estadísticas.
+    También incluye archivos huérfanos (existen físicamente pero no están indexados).
     Útil para ver qué hay en el corpus.
     """
     try:
-        index, chunks, sources, pages = ingest.load_index_safe()
+        # Cargar índice si existe
+        indexed_docs = {}
+        try:
+            index, chunks, sources, pages = ingest.load_index_safe()
+            
+            # Agrupar chunks por documento
+            for i, (chunk, source) in enumerate(zip(chunks, sources)):
+                if source not in indexed_docs:
+                    indexed_docs[source] = {
+                        "name": source,
+                        "chunks": 0,
+                        "total_chars": 0,
+                        "has_pages": False,
+                        "indexed": True
+                    }
+                indexed_docs[source]["chunks"] += 1
+                indexed_docs[source]["total_chars"] += len(chunk)
+                if pages[i] is not None:
+                    indexed_docs[source]["has_pages"] = True
+        except FileNotFoundError:
+            # No hay índice, solo archivos físicos
+            pass
         
-        # Agrupar chunks por documento
-        doc_stats = {}
-        for i, (chunk, source) in enumerate(zip(chunks, sources)):
-            if source not in doc_stats:
-                doc_stats[source] = {
-                    "name": source,
+        # Buscar archivos físicos (incluyendo huérfanos)
+        physical_files = set()
+        for pattern in ("*.pdf", "*.md", "*.markdown", "*.txt"):
+            for p in settings.docs_dir.glob(pattern):
+                if p.is_file():
+                    physical_files.add(p.name)
+        
+        # Agregar archivos huérfanos (existen físicamente pero no en índice)
+        for filename in physical_files:
+            if filename not in indexed_docs:
+                indexed_docs[filename] = {
+                    "name": filename,
                     "chunks": 0,
                     "total_chars": 0,
-                    "has_pages": False
+                    "has_pages": False,
+                    "indexed": False  # Marcado como no indexado
                 }
-            doc_stats[source]["chunks"] += 1
-            doc_stats[source]["total_chars"] += len(chunk)
-            if pages[i] is not None:
-                doc_stats[source]["has_pages"] = True
         
         # Convertir a lista ordenada
-        documents = sorted(doc_stats.values(), key=lambda x: x["name"])
+        documents = sorted(indexed_docs.values(), key=lambda x: x["name"])
+        
+        # Contar chunks totales
+        total_chunks = sum(d["chunks"] for d in documents)
         
         return {
             "total_documents": len(documents),
-            "total_chunks": len(chunks),
+            "total_chunks": total_chunks,
             "documents": documents
         }
         
@@ -366,27 +457,134 @@ def ingest_all_from_folder(request: Request):
 @app.get("/sources")
 def list_sources():
     """
-    Lista nombres de archivos disponibles (en filesystem y/o presentes en el índice).
+    Lista nombres de archivos disponibles SOLO si existen físicamente en docs/.
+    No incluye documentos borrados que aún están en el índice.
     """
     try:
         names = set()
-        # 1) del filesystem
+        # Solo archivos del filesystem (documentos que realmente existen)
         for pattern in ("*.pdf", "*.md", "*.markdown", "*.txt"):
             for p in settings.docs_dir.glob(pattern):
                 if p.is_file():
                     names.add(p.name)
-        # 2) del índice (si existe)
-        try:
-            _, _, sources, _ = ingest.load_index()
-            for s in sources:
-                if s:
-                    names.add(s)
-        except FileNotFoundError:
-            pass
+        
+        # 🔧 FIX: NO incluir archivos solo del índice
+        # Esto previene mostrar documentos que fueron borrados pero aún están en meta.json
 
         return {"sources": sorted(names)}
     except Exception as e:
         app_logger.error(f"Error listando fuentes: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/documents/{filename}")
+async def delete_document(filename: str):
+    """
+    Elimina un documento completamente:
+    1. Archivo físico de docs/
+    2. Chunks del índice (meta.json)
+    3. Reconstruye índice FAISS
+    """
+    try:
+        doc_path = settings.docs_dir / filename
+        
+        # Verificar que existe
+        if not doc_path.exists():
+            raise HTTPException(status_code=404, detail=f"Documento '{filename}' no encontrado")
+        
+        app_logger.info(f"🗑️  Eliminando documento: {filename}")
+        
+        # 1. Eliminar archivo físico
+        doc_path.unlink()
+        app_logger.info(f"✅ Archivo eliminado: {filename}")
+        
+        # 2. Limpiar índice
+        meta_path = settings.store_dir / "meta.json"
+        chunks_removed = 0
+        
+        if meta_path.exists():
+            import json
+            meta = json.loads(meta_path.read_text(encoding='utf-8'))
+            
+            # Contar chunks antes
+            old_count = len(meta['chunks'])
+            
+            # Filtrar chunks del documento eliminado
+            keep_indices = [
+                i for i, s in enumerate(meta['sources'])
+                if s != filename
+            ]
+            
+            meta['chunks'] = [meta['chunks'][i] for i in keep_indices]
+            meta['sources'] = [meta['sources'][i] for i in keep_indices]
+            meta['pages'] = [meta['pages'][i] for i in keep_indices]
+            
+            chunks_removed = old_count - len(meta['chunks'])
+            
+            # Guardar meta.json actualizado
+            meta_path.write_text(
+                json.dumps(meta, indent=2, ensure_ascii=False),
+                encoding='utf-8'
+            )
+            
+            app_logger.info(f"✅ Eliminados {chunks_removed} chunks del índice")
+        
+        # 3. Reconstruir índice FAISS
+        faiss_path = settings.store_dir / "faiss.index"
+        if faiss_path.exists():
+            faiss_path.unlink()
+            app_logger.info("✅ Índice FAISS marcado para reconstrucción")
+        
+        return {
+            "success": True,
+            "message": f"Documento '{filename}' eliminado correctamente",
+            "chunks_removed": chunks_removed
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        app_logger.error(f"Error eliminando documento: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/documents")
+async def delete_all_documents():
+    """
+    Elimina TODOS los documentos:
+    1. Todos los archivos de docs/
+    2. Todo el índice (meta.json y faiss.index)
+    """
+    try:
+        app_logger.warning("🗑️  Eliminando TODOS los documentos")
+        
+        # Contar documentos
+        doc_count = 0
+        for pattern in ("*.pdf", "*.md", "*.markdown", "*.txt"):
+            for p in settings.docs_dir.glob(pattern):
+                if p.is_file():
+                    p.unlink()
+                    doc_count += 1
+        
+        # Eliminar índices
+        meta_path = settings.store_dir / "meta.json"
+        faiss_path = settings.store_dir / "faiss.index"
+        
+        if meta_path.exists():
+            meta_path.unlink()
+        if faiss_path.exists():
+            faiss_path.unlink()
+        
+        app_logger.info(f"✅ Eliminados {doc_count} documentos y los índices")
+        
+        return {
+            "success": True,
+            "message": f"Eliminados {doc_count} documentos correctamente",
+            "documents_removed": doc_count
+        }
+        
+    except Exception as e:
+        app_logger.error(f"Error eliminando todos los documentos: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -668,3 +866,143 @@ def debug_pdfjs():
         "build_exists": build.exists(),
         "web_children": sorted([p.name for p in web.iterdir()], key=str.lower) if web.exists() else [],
     }
+
+
+# -------------------------
+# Conversaciones
+# -------------------------
+@app.post("/conversations/{conv_id}")
+async def save_conversation(conv_id: str, messages: List[dict]):
+    """
+    Guarda una conversación completa.
+    
+    Args:
+        conv_id: ID único de la conversación
+        messages: Lista de mensajes
+    
+    Returns:
+        Status de la operación
+    """
+    try:
+        conversation_manager.save_conversation(conv_id, messages)
+        return {"status": "saved", "conv_id": conv_id, "message_count": len(messages)}
+    except Exception as e:
+        app_logger.error(f"Error saving conversation {conv_id}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/conversations/{conv_id}")
+async def get_conversation(conv_id: str):
+    """
+    Recupera una conversación por ID.
+    
+    Args:
+        conv_id: ID de la conversación
+    
+    Returns:
+        Conversación completa o 404
+    """
+    conv = conversation_manager.load_conversation(conv_id)
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return conv
+
+
+@app.get("/conversations")
+async def list_conversations(limit: int = 50):
+    """
+    Lista todas las conversaciones (metadata).
+    
+    Args:
+        limit: Número máximo de conversaciones
+    
+    Returns:
+        Lista de conversaciones con metadata
+    """
+    try:
+        return conversation_manager.list_conversations(limit=limit)
+    except Exception as e:
+        app_logger.error(f"Error listing conversations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/conversations/{conv_id}")
+async def delete_conversation(conv_id: str):
+    """
+    Elimina una conversación.
+    
+    Args:
+        conv_id: ID de la conversación
+    
+    Returns:
+        Status de la operación
+    """
+    deleted = conversation_manager.delete_conversation(conv_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return {"status": "deleted", "conv_id": conv_id}
+
+
+# -------------------------
+# Feedback
+# -------------------------
+@app.post("/feedback")
+async def submit_feedback(request: FeedbackRequest):
+    """
+    Registra feedback del usuario sobre una respuesta.
+    
+    Args:
+        request: Datos del feedback (message_id, feedback, question, answer, metadata)
+    
+    Returns:
+        Status de la operación
+    """
+    try:
+        feedback_manager.save_feedback(
+            request.message_id, 
+            request.feedback, 
+            request.question, 
+            request.answer, 
+            request.metadata
+        )
+        return {
+            "status": "ok", 
+            "message_id": request.message_id, 
+            "feedback": request.feedback
+        }
+    except Exception as e:
+        app_logger.error(f"Error saving feedback: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/feedback/stats")
+async def get_feedback_stats():
+    """
+    Obtiene estadísticas de feedback.
+    
+    Returns:
+        Estadísticas agregadas de feedback
+    """
+    try:
+        return feedback_manager.get_stats()
+    except Exception as e:
+        app_logger.error(f"Error getting feedback stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/feedback/recent")
+async def get_recent_feedback(limit: int = 50):
+    """
+    Obtiene los últimos feedback registrados.
+    
+    Args:
+        limit: Número máximo de feedback
+    
+    Returns:
+        Lista de feedback recientes
+    """
+    try:
+        return feedback_manager.get_recent_feedback(limit=limit)
+    except Exception as e:
+        app_logger.error(f"Error getting recent feedback: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

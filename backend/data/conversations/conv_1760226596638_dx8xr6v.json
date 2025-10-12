@@ -1,0 +1,428 @@
+{
+  "id": "conv_1760226596638_dx8xr6v",
+  "created_at": "2025-10-11T19:12:43.716104",
+  "updated_at": "2025-10-11T19:58:32.241288",
+  "messages": [
+    {
+      "id": "user-1760227885583",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-12T00:11:25.583Z"
+    },
+    {
+      "id": "assistant-1760227885583",
+      "role": "assistant",
+      "content": " Este documento trata sobre una publicación que afectó la imagen y credibilidad de una Universidad al no verificar correctamente información sobre un estudiante y su título académico. La Universidad identificó el error, confirmó la legitimacy del título y contactó con el responsable de la publicación para rectificarlo. Además, se hizo mención de que la publicación incumplió con ciertos artículos de la Ley Orgánica de Comunicación.",
+      "citations": [
+        {
+          "id": 2,
+          "score": 0.8045943379402161,
+          "text": "Este contenido ha sido publicado sin que la información haya sido verificada ni \ncontrastada con fuentes institucionales, lo cual ha generado afectaciones a la \nimagen, credibilidad y buen nombre de nuestra Universidad, que durante 103 \naños se ha ganado la confianza de la sociedad ecuatoriana a través de su trabajo \nacadémico, científico y ético. La Universidad identificó al estudiante al que per",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.8106833696365356,
+          "text": "La Universidad identificó al estudiante al que pertenece el título que aparece en \nel video. Tras la verificación correspondiente, se confirmó que dicho título fue \nlegalmente expedido, cuenta con todos los registros académicos completos y en \nregla, y que las personas que participaron en el proceso de titulación constan en \nlos distributivos institucionales de esos años, incluyendo personal milit",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        },
+        {
+          "id": 0,
+          "score": 0.790651798248291,
+          "text": "BOLETÍN DE PRENSA \n \nLa Universidad de las Fuerzas Armadas-ESPE rechaza \npublicaciones no verificadas que afectan su imagen institucional \n \nLa Universidad de las Fuerzas Armadas – ESPE informa que ha sido \nmencionada en un contenido (video-reel) difundido por el medio de comunicación \n“La Posta” a partir del día lunes 06 de octubre de 2025, a través de internet \nenlace: https://www.facebook.com/r",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.7973440289497375,
+          "text": "BOLETÍN DE PRENSA \n \nLa Universidad de las Fuerzas Armadas-ESPE rechaza \npublicaciones no verificadas que afectan su imagen institucional \n \nLa Universidad de las Fuerzas Armadas – ESPE informa que ha sido \nmencionada en un contenido (video-reel) difundido por el medio de comunicación \n“La Posta” a partir del día lunes 06 de octubre de 2025, a través de internet \nenlace: https://www.facebook.com/r",
+          "page": 1,
+          "source": "BOLETIN DE PRENSA SOBRE PUBLICACIONES.pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:11:25.583Z",
+      "cached": false,
+      "searchMode": "multi",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760228505582",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-12T00:21:45.582Z"
+    },
+    {
+      "id": "assistant-1760228505582",
+      "role": "assistant",
+      "content": " Este documento trata sobre la influencia negativa de valores culturales en el desarrollo económico de América Latícia y particularmente en Ecuador, según la perspectiva histórica de Osvaldo Hurtado. El autor reflexiona sobre la posibilidad de que las costumbres, actitudes, sentimientos, ideales, creencias, valores y comportamientos del ecuatoriano hayan impedido el desarrollo del país y la operación adecuada del sistema democrático.",
+      "citations": [
+        {
+          "id": 6,
+          "score": 0.7736417055130005,
+          "text": "La obra de Osvaldo Hurtado trata desde la perspectiva histórica, sobre las \ncostumbres del ecuatoriano frente al trabajo, comercio, estudios y en general, \nfrente a la forma de vivir, pensar y actuar y cómo ellas han influido en su \neconomía y nivel de vida. En su nota introductoria, el autor afirma: “…a \nprincipios de los años noventa comencé a reflexionar sobre la posibilidad de que \nse encontra",
+          "page": 2,
+          "source": "Las_costumbres_de_los_ecuatorianos.pdf"
+        },
+        {
+          "id": 5,
+          "score": 0.7718486785888672,
+          "text": "En ninguna otra \nregión, los valores culturales han tenido tanto impacto negativo en el desarrollo \neconómico, como en América Latina y particularmente, Ecuador. La obra de Osvaldo Hurtado trata desde la perspectiva histórica, sobre las \ncostumbres del ecuatoriano frente al trabajo, comercio, estudios y en general, \nfrente a la forma de vivir, pensar y actuar y cómo ellas han influido en su \necono",
+          "page": 2,
+          "source": "Las_costumbres_de_los_ecuatorianos.pdf"
+        },
+        {
+          "id": 14,
+          "score": 0.7377015948295593,
+          "text": "3\nse consideraba que el trabajo deshonraba a las personas, la desconfianza \nprevalecía en toda relación comercial, así como la apatía e indolencia. Los indios \nno se quedaban atrás, tenían el vicio de la bebida, hurto y mentira. Dentro de \neste entorno, donde prevaleció la ausencia del imperio de la ley en todas las \nregiones, transcurrieron los siglos coloniales. Pero desde fines del siglo XVIII ",
+          "page": 4,
+          "source": "Las_costumbres_de_los_ecuatorianos.pdf"
+        },
+        {
+          "id": 29,
+          "score": 0.7539939880371094,
+          "text": "Además este taller-factoría, daría gran impulso y estimularía las infinitas \nempresas industriales que reclaman la bella y rica provincia marítima de \nGuayaquil, y aún para las demás del Ecuador; pues las grandes dificultades que \nse presentan al hombre emprendedor e industrioso para adquirir maquinarias o \ninstrumentos que suplan o ahorren el trabajo manual y nos permitan competir \ncon la industr",
+          "page": 5,
+          "source": "Las_costumbres_de_los_ecuatorianos.pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:21:45.582Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760229071847",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-12T00:31:11.847Z"
+    },
+    {
+      "id": "assistant-1760229071847",
+      "role": "assistant",
+      "content": "",
+      "citations": [],
+      "timestamp": "2025-10-12T00:31:11.848Z"
+    },
+    {
+      "id": "user-1760229480514",
+      "role": "user",
+      "content": "que contiene este documento",
+      "timestamp": "2025-10-12T00:38:00.514Z"
+    },
+    {
+      "id": "assistant-1760229480514",
+      "role": "assistant",
+      "content": " No hay suficiente información en el contexto para determinar qué contiene este documento.",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.7647759914398193,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T00:38:00.514Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760229545837",
+      "role": "user",
+      "content": "cual es la variable zeebe_authorization",
+      "timestamp": "2025-10-12T00:39:05.837Z"
+    },
+    {
+      "id": "assistant-1760229545837",
+      "role": "assistant",
+      "content": " No hay información suficiente en el contexto sobre la variable \"zeebe\\_authorization\".",
+      "citations": [
+        {
+          "id": 0,
+          "score": 0.826445460319519,
+          "text": "export ZEEBE_ADDRESS='ade4e335-ac95-440d-abd2-7ec2a7b0524b.syd-1.zeebe.camunda.io:443'\nexport ZEEBE_CLIENT_ID='HVAI3u~KmNiIDsxAXwu7HN3L04WdToU4'\nexport ZEEBE_CLIENT_SECRET='-9XgrHV1e.J_gGE7Q~3__HV0W1ciBsnJDaMxHnyXsdE_LynnlfriM884PnqWfsZ2'\nexport ZEEBE_AUTHORIZATION_SERVER_URL='https://login.cloud.camunda.io/oauth/token'\nexport ZEEBE_REST_ADDRESS='https://syd-1.zeebe.camunda.io/ade4e335-ac95-440d-a",
+          "page": 1,
+          "source": "CamundaCloudMgmtAPI-Client-CasaMilitar.txt"
+        }
+      ],
+      "timestamp": "2025-10-12T00:39:05.837Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760229586597",
+      "role": "user",
+      "content": "de que trata este documento",
+      "timestamp": "2025-10-12T00:39:46.597Z"
+    },
+    {
+      "id": "assistant-1760229586597",
+      "role": "assistant",
+      "content": " Este documento trata sobre una Carta Compromiso entre la Universidad de las Fuerzas Armadas y un estudiante para desarrollar prácticas pre-profesionales supervisadas en Casa Militar Presidencial, fortaleciendo el aprendizaje y beneficiando a la institución.",
+      "citations": [
+        {
+          "id": 5,
+          "score": 0.7987460494041443,
+          "text": "La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglamento de Régimen Académico y en función de que los sectores sociales, productivos y\nculturales guardan estrecha relación con las Instituciones de",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.8081158399581909,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.8051854372024536,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 3,
+          "score": 0.796097993850708,
+          "text": "1550047656, estudiante de la Carrera de Ingeniería de Software, al tenor de las siguientes cláusulas:\nPRIMERA.- ANTECEDENTES. La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudian",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:39:46.597Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760229643653",
+      "role": "user",
+      "content": "quien es el estudiante que se nombra en la carta ?",
+      "timestamp": "2025-10-12T00:40:43.653Z"
+    },
+    {
+      "id": "assistant-1760229643653",
+      "role": "assistant",
+      "content": " El estudiante mencionado en la carta es Andres Alexander Espin Andrade.",
+      "citations": [
+        {
+          "id": 2,
+          "score": 0.796135663986206,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.7960971593856812,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 1,
+          "score": 0.7907906770706177,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.800403356552124,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:40:43.653Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760229818301",
+      "role": "user",
+      "content": "dame un resumen con estructura de introduccion desarrollo y conclusion sobre este docuemento",
+      "timestamp": "2025-10-12T00:43:38.301Z"
+    },
+    {
+      "id": "assistant-1760229818301",
+      "role": "assistant",
+      "content": " Introducción:\nEste documento trata sobre la relación entre una institución y un estudiante durante un período de prácticas. Se detallan las funciones del responsable designado por la institución para supervisar, orientar y evaluar al estudiante.\n\nDesarrollo:\nEl documento establece que el responsable debe supervisar, orientar y evaluar las actividades del estudiante durante sus prácticas. Además, debe proveerle la información necesaria sobre las políticas, normas y procedimientos internos para el cumplimiento de sus tareas. El contrato o convenio individual de pasantía se firmará para formalizar la relación, especificando si es solo académica o laboral con fines formativos, incluyendo la afiliación al IESS en caso de una relación laboral remunerada.\n\nConclusión:\nEn resumen, el documento describe las funciones del responsable de una institución para apoyar y supervisar a un estudiante durante sus prácticas, incluyendo la firma de",
+      "citations": [
+        {
+          "id": 7,
+          "score": 0.7978081703186035,
+          "text": "Designar un responsable que supervise, oriente y evalúe las actividades del Estudiante durante el período de\nprácticas. 3. Proporcionar al Estudiante la información necesaria sobre las políticas, normas y procedimientos internos\npara el cumplimiento de sus actividades. 4. Suscribir un convenio o contrato individual de pasantía para formalizar la relación con el Estudiante, en el\nque se especificar",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.8196277618408203,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 9,
+          "score": 0.8204518556594849,
+          "text": "2\n3. Asistir puntualmente y cumplir con el horario acordado para la realización de las Prácticas\nPreprofesionales. 4. Informar de inmediato cualquier inconveniente que afecte el desarrollo de sus actividades. 5. Presentar los informes requeridos por la Institución al término de la práctica. CUARTA.-DURACION\nLa presente Carta Compromiso tendrá una duración: Desde 19/09/2025 hasta 23/01/2026 conform",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 11,
+          "score": 0.8104082345962524,
+          "text": "5. Faltas reiteradas de asistencia y/o puntualidad injustificadas, o incumplimiento de las actividades\nplanificadas. Los celebrantes se ratifican en todo el contenido de la presente “Carta de Compromiso para las realizaciones de\nprácticas preprofesionales” y para constancia firman en unidad de acto, en tres ejemplares del mismo tenor y\nefecto, en la ciudad de Sangolquí al quinto día del mes de sep",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:43:38.301Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760230238361",
+      "role": "user",
+      "content": "Dame un resumen de este documento que tenga la estructura de Introduccion, desarrollo y conclusion",
+      "timestamp": "2025-10-12T00:50:38.361Z"
+    },
+    {
+      "id": "assistant-1760230238361",
+      "role": "assistant",
+      "content": " Introducción: Este documento es una Carta Compromiso para estudiantes de una Universidad, que se comprometen a realizar prácticas profesionales supervisadas en Casa Militar Presidencial.\n\nDesarrollo: El objeto de la carta es que los estudiantes desarrolle prácticas preprofesionales vinculadas a su carrera, fortaleciendo el aprendizaje y beneficiando a la Casa Militar Presidencial. La Institución se compromete a brindar facilidades necesarias, designar un responsable para supervisión, orientación y evaluación de las actividades del estudiante durante el período de prácticas.\n\nConclusión: En resumen, este documento es una Carta Compromiso entre la Institución y los estudiantes, que establece el objetivo de realizar prácticas preprofesionales supervisadas en Casa Militar Presidencial, con la institución brindando apoyo y evaluación.",
+      "citations": [
+        {
+          "id": 8,
+          "score": 0.8079112768173218,
+          "text": "Cumplir con el plan de actividades establecido por la Institución. 2. Respetar las normas internas de la Institución y mantener confidencialidad sobre la información a la que\ntenga acceso.",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.825783371925354,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 7,
+          "score": 0.7999840974807739,
+          "text": "Designar un responsable que supervise, oriente y evalúe las actividades del Estudiante durante el período de\nprácticas. 3. Proporcionar al Estudiante la información necesaria sobre las políticas, normas y procedimientos internos\npara el cumplimiento de sus actividades. 4. Suscribir un convenio o contrato individual de pasantía para formalizar la relación con el Estudiante, en el\nque se especificar",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 5,
+          "score": 0.8126758337020874,
+          "text": "La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglamento de Régimen Académico y en función de que los sectores sociales, productivos y\nculturales guardan estrecha relación con las Instituciones de",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:50:38.361Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760230480043",
+      "role": "user",
+      "content": "que se debe hacer en la Quita terminacion",
+      "timestamp": "2025-10-12T00:54:40.043Z"
+    },
+    {
+      "id": "assistant-1760230480043",
+      "role": "assistant",
+      "content": " La Carta de Compromiso puede terminar por el cumplimiento del objeto y duración establecida (1), mutuo acuerdo de las partes (2), decisión unilateral de la Institución con informe de la causa motivadora (3), o decisión unilateral del Estudiante con notificación previa (4).",
+      "citations": [
+        {
+          "id": 9,
+          "score": 0.8087660074234009,
+          "text": "2\n3. Asistir puntualmente y cumplir con el horario acordado para la realización de las Prácticas\nPreprofesionales. 4. Informar de inmediato cualquier inconveniente que afecte el desarrollo de sus actividades. 5. Presentar los informes requeridos por la Institución al término de la práctica. CUARTA.-DURACION\nLa presente Carta Compromiso tendrá una duración: Desde 19/09/2025 hasta 23/01/2026 conform",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 4,
+          "score": 0.772308886051178,
+          "text": "La Casa Militar Presidencial es una Entidad que realiza su actividad en el ámbito de Gestión de Seguridad de la\nPresidencia y sus funcionarios. La Universidad de las Fuerzas Armadas, es una Institución de Educación Superior de carácter público, que requiere\nque sus estudiantes pongan en práctica su aprendizaje mediante prácticas pre-profesionales, dentro de los requisitos\nestablecidos en el Reglam",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.7718052864074707,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 7,
+          "score": 0.8051477670669556,
+          "text": "Designar un responsable que supervise, oriente y evalúe las actividades del Estudiante durante el período de\nprácticas. 3. Proporcionar al Estudiante la información necesaria sobre las políticas, normas y procedimientos internos\npara el cumplimiento de sus actividades. 4. Suscribir un convenio o contrato individual de pasantía para formalizar la relación con el Estudiante, en el\nque se especificar",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:54:40.043Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    },
+    {
+      "id": "user-1760230588543",
+      "role": "user",
+      "content": "cuanto dura la carta de compromiso segun el documento ?",
+      "timestamp": "2025-10-12T00:56:28.543Z"
+    },
+    {
+      "id": "assistant-1760230619716",
+      "role": "assistant",
+      "content": "No hay información suficiente en el contexto para determinar la duración de la Carta de Compromiso según el documento.",
+      "citations": [
+        {
+          "id": 1,
+          "score": 0.8176875710487366,
+          "text": "1\nCARTA DE COMPROMISO PARA LA REALIZACIÓN DE LAS PRÁCTICAS PRE\nPROFESIONALES EN INSTITUCIONES DEL SECTOR PÚBLICO. Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería e",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 2,
+          "score": 0.8140459656715393,
+          "text": "Intervienen en la celebración de la presente Carta de Compromiso el/la Ingeniero Henry Mauricio Guerrón Rosero\nen calidad de área de Desarrollo de Software de la Casa Militar Presidencial que en adelante se denominará “la\nInstitución”; y el(la) Director(a) de la Carrera de Ingeniería en Software en representación de la Universidad de\nlas Fuerzas Armadas “ESPE”, que en adelante se denominará “la Un",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 6,
+          "score": 0.8232367038726807,
+          "text": "SEGUNDA.- OBJETIVO\nLa presente Carta Compromiso tiene por objeto que el/a (los) alumno(s) de la Carrera, desarrolle(n) prácticas pre\nprofesionales supervisadas, en Casa Militar Presidencial en las condiciones y tiempo determinado en el diseño de\nla práctica pre profesional planificada, vinculada a la carrera que el estudiante está cursando en la Universidad, a\nfin de fortalecer el aprendizaje y ap",
+          "page": 1,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        },
+        {
+          "id": 9,
+          "score": 0.8616440296173096,
+          "text": "2\n3. Asistir puntualmente y cumplir con el horario acordado para la realización de las Prácticas\nPreprofesionales. 4. Informar de inmediato cualquier inconveniente que afecte el desarrollo de sus actividades. 5. Presentar los informes requeridos por la Institución al término de la práctica. CUARTA.-DURACION\nLa presente Carta Compromiso tendrá una duración: Desde 19/09/2025 hasta 23/01/2026 conform",
+          "page": 2,
+          "source": "02EspinCompromisoIndividual (2).pdf"
+        }
+      ],
+      "timestamp": "2025-10-12T00:56:59.716Z",
+      "cached": false,
+      "searchMode": "single",
+      "temperature": 0.2
+    }
+  ]
+}

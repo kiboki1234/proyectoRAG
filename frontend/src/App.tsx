@@ -24,7 +24,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-full bg-gray-50 dark:bg-gray-950">
       <Header onOpenSettings={() => setOpenSettings(true)} />
 
       <main className="mx-auto max-w-6xl px-4 py-6 space-y-6">
@@ -35,7 +35,7 @@ export default function App() {
           <ChatPanel source={selectedSource} onSourceChange={changeSource} onJumpToPage={handleJumpToPage} />
         </div>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-gray-400 dark:text-gray-600">
           Hecho con ❤️ y Software Libre · Funciona 100% local
         </p>
       </main>

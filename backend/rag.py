@@ -249,19 +249,37 @@ def search(
     if filter_source and filter_source.strip() and sources:
         fs = filter_source.strip().lower()
         print(f"[RAG] Aplicando filtro: '{fs}'")
-        # Primero intenta match exacto
-        exact = [c for c in merged if (sources[c[0]] or "").lower() == fs]
-        # Si no hay match exacto, intenta match parcial (contiene)
-        if not exact:
-            exact = [c for c in merged if fs in (sources[c[0]] or "").lower()]
-        # Solo aplica el filtro si encontró resultados
+        
+        # 🔧 FIX: Identificar TODOS los chunks del documento filtrado
+        doc_indices = [
+            i for i, s in enumerate(sources)
+            if s and (s.lower() == fs or fs in s.lower())
+        ]
+        
+        if not doc_indices:
+            print(f"[RAG] ⚠️  Documento '{fs}' no existe en el índice")
+            return []
+        
+        print(f"[RAG] Documento tiene {len(doc_indices)} chunks totales en el índice")
+        
+        # 🔧 FIX: Forzar inclusión de todos los chunks del documento en merged
+        # (incluso si no aparecieron en búsqueda vectorial/BM25)
+        for idx in doc_indices:
+            if idx not in seen:
+                # Agregar con score bajo (0.1) para que rerank los ordene
+                merged.append((idx, 0.1, chunks[idx]))
+                seen.add(idx)
+        
+        # Ahora filtrar merged para solo chunks del documento
+        exact = [c for c in merged if (sources[c[0]] or "").lower() == fs or fs in (sources[c[0]] or "").lower()]
+        
         if exact:
-            print(f"[RAG] Filtro aplicado: {len(merged)} → {len(exact)} chunks")
+            print(f"[RAG] Filtro aplicado: {len(merged)} → {len(exact)} chunks del documento")
             merged = exact
         else:
-            # Si no hay resultados con el filtro, devolver vacío
-            print(f"[RAG] ⚠️  Sin resultados para filtro '{fs}'")
-            return []
+            # Fallback: no debería llegar aquí, pero por seguridad
+            print(f"[RAG] ⚠️  Fallback: devolviendo {min(k, len(doc_indices))} chunks del documento")
+            merged = [(i, 0.5, chunks[i]) for i in doc_indices[:min(k, len(doc_indices))]]
     else:
         print(f"[RAG] Sin filtro - buscando en {len(merged)} chunks del corpus completo")
 

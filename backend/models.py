@@ -103,5 +103,29 @@ class IngestResponse(BaseModel):
 class ErrorResponse(BaseModel):
     """Response model para errores"""
     detail: str = Field(..., description="Descripción del error")
+
+class ErrorDetail(BaseModel):
+    """Modelo detallado de errores con metadata"""
+    code: str = Field(..., description="Código de error (ej: VALIDATION_ERROR, INTERNAL_ERROR)")
+    message: str = Field(..., description="Mensaje de error legible")
+    details: Optional[Dict[str, Any]] = Field(None, description="Detalles adicionales del error")
+    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat(), description="Timestamp del error")
     error_type: str = Field(default="generic", description="Tipo de error")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class FeedbackRequest(BaseModel):
+    """Request model para feedback de usuario"""
+    message_id: str = Field(..., description="ID del mensaje sobre el que se da feedback")
+    feedback: str = Field(..., description="Tipo de feedback: 'positive' o 'negative'")
+    question: Optional[str] = Field(None, description="Pregunta original (opcional)")
+    answer: Optional[str] = Field(None, description="Respuesta dada (opcional)")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Metadata adicional (opcional)")
+    
+    @field_validator('feedback')
+    @classmethod
+    def validate_feedback(cls, v: str) -> str:
+        """Valida que el feedback sea positivo o negativo"""
+        v = v.lower().strip()
+        if v not in ['positive', 'negative']:
+            raise ValueError("feedback debe ser 'positive' o 'negative'")
+        return v
