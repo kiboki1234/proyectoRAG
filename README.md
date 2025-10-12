@@ -301,7 +301,7 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📄 Licencia
 
-[Especificar licencia del proyecto]
+Aun por determinar, proximamente la configurare.
 
 ---
 
